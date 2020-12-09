@@ -77,7 +77,7 @@ copyin: SceNKWebProcessMain has nonsleeping lock
 ```
 
 
-
+---
 ### Contents
 [메인화면](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/README.md)<br>
 #### PS4 소개
