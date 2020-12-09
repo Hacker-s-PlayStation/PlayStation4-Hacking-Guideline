@@ -1,4 +1,5 @@
 ### Page Contents
+- [Hardware Overview](#Hardware-Overview)
 - [UART Log](#uart-log)
 	- [준비물](#준비물)
 	- [Step 1 : UART 포트 확인](#step-1--uart-포트-확인)
@@ -25,6 +26,9 @@
 
 ---
 # Hardware
+
+## Hardware Overview
+이번 프로젝트에서 하드웨어적으로 syscon dump와 sflash dump를 진행하게된 계기는 다음과 같다. 시스템 펌웨어 버전과 제조 모드 정보를 syscon의 snvs에 저장되고, syscon은 보드의 거의 모든 항목에 대한 클럭/전원 관리, 대부분의 프로세서 부팅, 기타 저속 주변 장치에 대한 프록시 역할 등 다양한 역할을 하기 때문에 dump를 해보았다. 또한 Aeolia용 펌웨어 업데이트 패키지는 sflash에 저장되기 때문에 sflash도 dump를 진행해봤다. 추가적으로 새로운 칩에 dump한 내용을 덮어 씌우면 버전을 업데이트 하더라도 다시 이전 버전의 syscon, sflash를 덮어 씌어놓은 칩으로 교체한다면 다운그레이드도 가능하다.
 
 ## UART Log
 
