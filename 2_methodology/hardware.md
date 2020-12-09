@@ -55,7 +55,8 @@ JumperWire를 위에서 확인한 UART 포트에 납땜해서 연결을 해준�
 ### Step 3 : USB to TTL Serial Cable 연결
 
 ![UART_to_Serial](https://user-images.githubusercontent.com/48618245/101595351-92c59780-3a36-11eb-9aa6-d385ec93f6bc.jpeg)
-USB to TTL Serial Cable에 Step 2에서 납땜한 JumperWire를 연결해준다. GND는 GND끼리 연결해주고 UART 포트의 TX는 USB to TTL Serial Cable의 RX에 연겨해준다.
+
+USB to TTL Serial Cable에 Step 2에서 납땜한 JumperWire를 연결해준다. GND는 GND끼리 연결해주고 UART 포트의 TX는 USB to TTL Serial Cable의 RX에 연결해준다.
 
 ### Step 4 : UART Log 확인
 <img width="723" alt="UART_Log1" src="https://user-images.githubusercontent.com/48618245/101595832-62322d80-3a37-11eb-97b5-927d3e629647.png">
