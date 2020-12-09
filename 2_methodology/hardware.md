@@ -39,6 +39,7 @@
 ### Step 1 : UART 포트 확인
 
 ![UART](https://user-images.githubusercontent.com/48618245/101594879-bcca8a00-3a35-11eb-925c-f4f1cb90cc11.jpeg)
+
 PS4를 분해하여 메인보드를 보면 위 사진과 같은 곳에 UART 포트가 있다.
 
 
