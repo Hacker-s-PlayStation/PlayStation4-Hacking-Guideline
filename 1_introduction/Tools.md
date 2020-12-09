@@ -30,7 +30,10 @@
     * 이 프로그램 또한 선택해도 안되는 프로세스는 존재한다.
     * PS4 Debug Watch보다 기능은 현저히 떨어진다.
   * [사이트](https://www.psxhax.com/threads/ps4cheater-ps4-cheater-homebrew-app-to-find-game-cheat-codes.4529/page-222#post-157094)
-
+* PS4 Module Loader
+  * 플레이스테이션 4의 라이브러리를 아이다로 열었을 때, 심볼을 복구해주는 플러그인
+  * 모든 함수들의 심볼들을 복구해주지는 않지만 그래도 꽤나 많이 복구해준다.
+  * [사이트](https://github.com/SocraticBliss/ps4_module_loader)
 
 ## Hardware
 
