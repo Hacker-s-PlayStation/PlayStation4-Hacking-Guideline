@@ -1,50 +1,50 @@
-### Page Contents
-- [개요](#개요)
-  - [WebKit 이란?](#webkit-이란)
-- [WebKit 빌드](#webkit-빌드)
-  - [WebKit download](#webkit-download)
-  - [JSC 빌드](#jsc-빌드)
-  - [GTK 빌드](#gtk-빌드)
-  - [PS4 Webkit 빌드](#ps4-webkit-빌드)
-  - [Docker 환경](#docker-환경)
-- [PS4 WebKit의 특징](#ps4-webkit의-특징)
-  - [NO JIT](#no-jit)
-  - [NO Garbage Collector](#no-garbage-collector)
-  - [NO WASM](#no-wasm)
-- [PS4 WebKit exploit 방법론](#ps4-webkit-exploit-방법론)
-  - [Return Oriented Programming, Jump Oriented Programming](#return-oriented-programming-jump-oriented-programming)
-- [Sanitizer](#sanitizer)
-  - [개요](#개요-1)
-    - [AddressSanitizer(ASan)](#addresssanitizerasan)
-    - [MemorySanitizer(MSan)](#memorysanitizermsan)
-    - [UndefinedBehaviorSanitizer(UBSan)](#undefinedbehaviorsanitizerubsan)
-  - [빌드](#빌드)
-    - [Step 1 : 컴파일 플래그 설정](#step-1--컴파일-플래그-설정)
-    - [Step 2 : 빌드 환경설정](#step-2--빌드-환경설정)
-    - [Step 3 : clang 빌드](#step-3--clang-빌드)
-    - [Step 4 : 트러블슈팅](#step-4--트러블슈팅)
-    - [Step 5 : 테스트](#step-5--테스트)
-  - [문제점](#문제점)
-- [1-day 취약점 분석 방법론](#1-day-취약점-분석-방법론)
-  - [Chromium](#chromium)
-  - [exploit-db](#exploit-db)
-  - [Bugzilla](#bugzilla)
-  - [WebKit regression test](#webkit-regression-test)
-- [Reference](#reference)
+### Page Contents <!-- omit in toc -->
+- [1. 개요](#1-개요)
+  - [1.1. WebKit 이란?](#11-webkit-이란)
+- [2. WebKit 빌드](#2-webkit-빌드)
+  - [2.1. WebKit download](#21-webkit-download)
+  - [2.2. JSC 빌드](#22-jsc-빌드)
+  - [2.3. GTK 빌드](#23-gtk-빌드)
+  - [2.4. PS4 Webkit 빌드](#24-ps4-webkit-빌드)
+  - [2.5. Docker 환경](#25-docker-환경)
+- [3. PS4 WebKit의 특징](#3-ps4-webkit의-특징)
+  - [3.1. NO JIT](#31-no-jit)
+  - [3.2. NO Garbage Collector](#32-no-garbage-collector)
+  - [3.3. NO WASM](#33-no-wasm)
+- [4. PS4 WebKit exploit 방법론](#4-ps4-webkit-exploit-방법론)
+  - [4.1. Return Oriented Programming, Jump Oriented Programming](#41-return-oriented-programming-jump-oriented-programming)
+- [5. Sanitizer](#5-sanitizer)
+  - [5.1. 개요](#51-개요)
+    - [5.1.1. AddressSanitizer(ASan)](#511-addresssanitizerasan)
+    - [5.1.2. MemorySanitizer(MSan)](#512-memorysanitizermsan)
+    - [5.1.3. UndefinedBehaviorSanitizer(UBSan)](#513-undefinedbehaviorsanitizerubsan)
+  - [5.2. 빌드](#52-빌드)
+    - [5.2.1. Step 1 : 컴파일 플래그 설정](#521-step-1--컴파일-플래그-설정)
+    - [5.2.2. Step 2 : 빌드 환경설정](#522-step-2--빌드-환경설정)
+    - [5.2.3. Step 3 : clang 빌드](#523-step-3--clang-빌드)
+    - [5.2.4. Step 4 : 트러블슈팅](#524-step-4--트러블슈팅)
+    - [5.2.5. Step 5 : 테스트](#525-step-5--테스트)
+  - [5.3. 문제점](#53-문제점)
+- [6. 1-day 취약점 분석 방법론](#6-1-day-취약점-분석-방법론)
+  - [6.1. Chromium](#61-chromium)
+  - [6.2. exploit-db](#62-exploit-db)
+  - [6.3. Bugzilla](#63-bugzilla)
+  - [6.4. WebKit regression test](#64-webkit-regression-test)
+- [7. Reference](#7-reference)
 
 ---
 
 
-## 개요
+## 1. 개요
 
-### WebKit 이란?
+### 1.1. WebKit 이란?
 
 APPLE 에서 개발한 Safari, Chrome 등의 브라우저에서 사용되는 Open Source 렌더링 엔진이다. PS4 내부 브라우저에서도 Webkit을 사용한다. 그렇기에 우리는 해당 PS4의 웹킷을 attack vector로 삼았다.
 
 그러나 Webkit에서 User-Agent에 나오는 버전을 <strong>Freezing</strong> 하고 있어서 정확한 버전을 확인 할 수 없었고, PS4 Webkit ChangeLog를 확인해 보니 <strong>2018-12-16</strong> 이후로 SONY에서 자체적으로 fork를 떠 커스터마이징 한 것으로 추정 된 다.
 
-## WebKit 빌드
-### WebKit download
+## 2. WebKit 빌드
+### 2.1. WebKit download
 > 해당 실습은 우분투 18.04에서 2018-12-16 `a5beb7c88f12c377c3347f74776d2270fbbc79a4` 커밋 기준으로 진행 하였다.
 
 https://github.com/WebKit/webkit.git
@@ -67,7 +67,7 @@ sudo apt install cmake ruby libicu-dev gperf ninja-build
 
 또한 version에 따라 설치에 필요한 것들이 다를 수 있으니 그때 마다 설치해 주어야 한다.
 
-### JSC 빌드
+### 2.2. JSC 빌드
 JSC 빌드 명령어는 다음과 같다. 
 ```bash
 ./webkit/Tools/Scripts/build-webkit --jsc-only --debug
@@ -88,7 +88,7 @@ seohojin@ubuntu:~/Desktop$ ./webkit/WebKitBuild/Debug/bin/jsc
 >>> 
 ```
 
-### GTK 빌드
+### 2.3. GTK 빌드
 GTK를 빌드하기 위해서는 먼저 다음과 같은 선수 작업이 필요하다.
 
 ```bash
@@ -113,7 +113,7 @@ EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
 - `debug` : debug 모드로 빌드함 (debug 모드가 아니면 나중에 분석 할 때 describe라는 객체 등의 주소를 알어오는 함수를 못 사용함)
 - `gtk` : gtk 모드로 빌드함
 
-### PS4 Webkit 빌드
+### 2.4. PS4 Webkit 빌드
 PS4 Webkit은 `https://doc.dl.playstation.net/doc/ps4-oss/webkit.html` 이 곳에서 다운 받을 수 있다.
 
 다운을 받은 뒤  열어 보면 다음과 같이 `WebKit-601.2.7-800`과 `WebKit-606.4.6-800` 두 개의 폴더가 있음을 확인 할 수 있다. (8.00 기준)
@@ -122,25 +122,25 @@ PS4 Webkit은 `https://doc.dl.playstation.net/doc/ps4-oss/webkit.html` 이 곳�
 
 추정상 JSTest와 LayoutTest로 분류해 둔거 같다. 또한 606 version만 빌드가 되고, GTK는 아예 빌드가 안 된다. 그 외에 JSC 빌드는 기존 Webkit과 똑같다. 
 
-### Docker 환경
+### 2.5. Docker 환경
 [여기](https://hub.docker.com/r/gustjr1444/webkit/tags?page=1&ordering=last_updated)에 들어가면 그동안 우리가 취약점 분석을 위해 구축해둔 Webkit Docker 환경들을 다운 받을 수 있다. 여러 CVE 취약점 발생 환경부터, Webcore 분석 , ps4 Webkit 들을 구축해 두었으니, 활용하면 좋을 것 같다.
 
-## PS4 WebKit의 특징
-### NO JIT
+## 3. PS4 WebKit의 특징
+### 3.1. NO JIT
 Browser exploit 에서 주로 사용하는 기법이 JIT을 활용해서 fake object 와 RWX 메모리 영역을 만들어서 공격을 시도하는 것인데 해당 PS4의 브라우저에서는 JIT이 꺼져있다.
 
 <img width="1639" alt="스크린샷 2020-12-09 오후 7 43 46" src="https://user-images.githubusercontent.com/47859343/101619723-011a5200-3a57-11eb-9e6e-d2813fca28fb.png">
 
 다음과 같이 UART LOG로 확인해 보면 JIT이 비활성화 되있는 것을 알 수 있다.
 
-### NO Garbage Collector
+### 3.2. NO Garbage Collector
 JIT과 마찬가지로 browser exploit에서 활용되는 Garbage Collector도 PS4에서 꺼져있다.
 
 <img width="732" alt="스크린샷 2020-12-09 오후 7 44 04" src="https://user-images.githubusercontent.com/47859343/101620296-b4834680-3a57-11eb-830f-620004bc519d.png">
 
 마찬가지로 UART LOG를 보면 꺼져있음을 확인 할 수 있다.
 
-### NO WASM
+### 3.3. NO WASM
 WebAssembly 또한 PS4 브라우저에서 지원을 안한다. 다음과 같이 WebAssembly 객체를 만들 때 오류가 발생하면 alert로 메세지를 띄우게끔 테스트를 하면,
 
 ```javascript
@@ -164,25 +164,25 @@ WebAssembly 또한 PS4 브라우저에서 지원을 안한다. 다음과 같이 
 
 PS4에서 오류가 발생하여 `"ReferenceError: Can't find variable: WebAssembly"`이 출력 되는 것을 확인 할 수 있다. 즉, WebAssembly가 없다.
 
-## PS4 WebKit exploit 방법론
-### Return Oriented Programming, Jump Oriented Programming
+## 4. PS4 WebKit exploit 방법론
+### 4.1. Return Oriented Programming, Jump Oriented Programming
 
 (작성 중)
 
-## Sanitizer
-### 개요
+## 5. Sanitizer
+### 5.1. 개요
 Sanitizer는 버그를 감지해 주는 도구이다. 종류에 따라 탐지할 버그의 대상이 달라지며, 목적에 맞게 사용할 수 있다. 일반적으로 clang을 이용하여 컴파일을 할 때 Sanitizer 관련 플래그를 함께 입력해 주면 Sanitizer를 쉽게 붙일 수 있다.
 
-#### AddressSanitizer(ASan)
+#### 5.1.1. AddressSanitizer(ASan)
 buffer-overflow 및 heap use-after-free를 포함한 메모리 액세스 버그는 C 및 C++과 같은 프로그래밍 언어의 심각한 문제로 남아 있다. AddressSanitizer는 힙, 스택 및 전역 객체에 대한 out-of-bounds 액세스와 use-after-free 버그를 탐지해 주는 도구이다.<sup id="head1">[1](#foot1)</sup>
 
-#### MemorySanitizer(MSan)
+#### 5.1.2. MemorySanitizer(MSan)
 MemorySanitizer는 초기화 되지 않은 변수를 읽는 경우를 탐지해 주는 도구이다.<sup id="head2">[2](#foot2)</sup>
 
-#### UndefinedBehaviorSanitizer(UBSan)
+#### 5.1.3. UndefinedBehaviorSanitizer(UBSan)
 UndefinedBehaviorSanitizer는 undefined behavior를 탐지하는 빠른 도구이다. 컴파일 타임에 프로그램을 수정하며 프로그램 실행 중 정의되지 않은 다양한 행위들을 포착한다.<sup id="head3">[3](#foot3)</sup>
 
-### 빌드
+### 5.2. 빌드
 WebKit 같은 경우는 빌드를 할 때 perl 기반의 스크립트를 이용하게 된다. 또한 스크립트 중에서 빌드 환경설정을 해주는 스크립트가 존재하는데, 여기에서 Sanitizer 옵션을 줄 수 있다. (아래 명령어 참고<sup id="head4">[4](#foot4)</sup>)
 ```bash
 ./Tools/Scripts/set-webkit-configuration --release --asan
@@ -196,7 +196,7 @@ WebKit 같은 경우는 빌드를 할 때 perl 기반의 스크립트를 이용�
 
 > **Environment** : Ubuntu 18.04 64bit
 
-#### Step 1 : 컴파일 플래그 설정
+#### 5.2.1. Step 1 : 컴파일 플래그 설정
 컴파일 플래그를 설정할 수 있는 파일은 `/webkit/Source/cmake/WebKitCompilerFlags.cmake`이다. 이 파일의 내용을 수정하여 우리가 원하는 Sanitizer를 붙일 수 있다. 참고로 최신 버전의 `WebKitCompilerFlags.cmake` 에는 address, undefined, thread, memory, leak과 같은 flag를 적용할 수 있게끔 분기 로직이 존재한다. (아래 코드 참고)
 ```javascript
 foreach (SANITIZER ${ENABLE_SANITIZERS})
@@ -253,13 +253,13 @@ WEBKIT_PREPEND_GLOBAL_COMPILER_FLAGS(-fno-omit-frame-pointer -fno-optimize-sibli
   - Option : `-fno-omit-frame-pointer -fsanitize-memory-track-origins`
 - UndefinedBehaviorSanitizer(UBSan) : `-fsanitize=undefined`
 
-#### Step 2 : 빌드 환경설정
+#### 5.2.2. Step 2 : 빌드 환경설정
 ```bash
 ./Tools/Scripts/set-webkit-configuration --release --asan
 ```
 모든 옵션을 변경했다면 Asan 빌드를 활성화 해야 한다. release/debug는 자유롭게 선택하면 된다. 해당 작업을 해줘야 Sanitizer를 붙여서 빌드가 되고, 그 과정에서 원래는 Asan이 적용되어야 했던 부분이 우리가 원하는 Sanitizer로 변경될 것이다.
 
-#### Step 3 : clang 빌드
+#### 5.2.3. Step 3 : clang 빌드
 만약 우분투에서 해당 작업을 수행한다면 디폴트로 gcc 컴파일러를 통해 빌드가 될 것이다. 아쉽게도 gcc에서 `-fsanitize=MemorySanitizer`로 빌드시 에러가 발생한다. 이러한 옵션은 clang 컴파일러를 이용해야 하는데 환경변수로 기본 컴파일러를 지정해 주면 간단히 해결되는 문제이다.
 ```bash
 export CC=/usr/bin/clang
@@ -286,7 +286,7 @@ export CXX=/usr/bin/clang++
 > - CXX compiler : /usr/bin/c++
 > - ENABLE_ADDRESS_SANITIZER:BOOL=OFF
 
-#### Step 4 : 트러블슈팅
+#### 5.2.4. Step 4 : 트러블슈팅
 아마도 빌드는 한 번에 되지 않을 것이다. `Could NOT find Threads (missing: Threads_FOUND)` 이런 메시지가 뜨면서 빌드에 실패할 수 있다. 이 경우 가장 최상위 디렉토리에 존재하는 `CMakeLists.txt` 파일을 수정해 주면 된다.
 ```bash
 ❯ pwd
@@ -307,7 +307,7 @@ set(CMAKE_USE_PTHREADS_INIT 1)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 ```
-#### Step 5 : 테스트
+#### 5.2.5. Step 5 : 테스트
 마지막으로 PoC를 테스트해보거나 `testmasm` 바이너리를 한 번 실행해 보자.
 ```bash
 # Built with --jsc-only
@@ -318,27 +318,27 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 ![msan](https://user-images.githubusercontent.com/45416961/101595740-3adb6080-3a37-11eb-815c-8a8727ee3ee4.png)
 위와 같이 메시지가 뜨면 빌드에 성공한 것이다. 만약 위 사진처럼 출력되지 않는다면 `CMakeCache.txt` 파일을 보면서 컴파일러나 Asan enable 설정이 잘 되었는지 점검해 보자.
 
-### 문제점
+### 5.3. 문제점
 > Asan 이외의 Sanitizer는 이용할 수 없을 정도로 매우 불안정하다.
 
 ![image](https://user-images.githubusercontent.com/45416961/101624586-7a1ca800-3a5d-11eb-8193-689541296010.png)
 아마 옛날 버전의 WebKit을 사용해서 그런 것일지도 모르겠다.*(본 프로젝트에서는 WebKit 최신 버전을 이용할 일이 없어서 빌드를 해보지 않았다.)* 2018-12-16 버전으로 Msan이나 UBSan을 붙여서 테스트를 해봤더니 오탐률이 거의 100%에 육박했다. 소위 말해 '개복치' 스럽다고도 할 수 있겠다. jsc에서 `print("hello world")`만 해줘도 Memory Leak이 발생하니 그 결과가 가히 실망스럽다. 
 
-## 1-day 취약점 분석 방법론
+## 6. 1-day 취약점 분석 방법론
 다음으로는 본 프로젝트에서 1-day 취약점을 분석하기 위해 수립 및 시행한 방법론을 소개하고자 한다.
-### Chromium
+### 6.1. Chromium
 ![image](https://user-images.githubusercontent.com/45416961/101621717-771fb880-3a59-11eb-9eca-bce3ecbad852.png)
 ![image](https://user-images.githubusercontent.com/45416961/101621198-c9aca500-3a58-11eb-9b20-12056b95fa12.png)
 가장 먼저 [Chromium](https://bugs.chromium.org/p/project-zero/issues/list?sort=-reported&q=webkit&can=1)에서 Project-zero 팀이 report 한 취약점들을 분석하고, PS4에 포팅하고, 코드 오디팅을 수행했다. 거의 모든 취약점들을 테스트해보았지만 이미 패치가 되었거나, PoC에 사용되는 모듈이 PS4에는 존재하지 않는 경우가 대부분이었다. 특히 JSC 취약점은 대개 JIT 컴파일러를 기반으로 하기 때문에 별다른 수확은 없었다.
 
-### exploit-db
+### 6.2. exploit-db
 ![image](https://user-images.githubusercontent.com/45416961/101621658-6707d900-3a59-11eb-8f9a-000d03573bc7.png)
 [exploit-db](https://www.exploit-db.com/) 또한 Chromium과 함께 초반에 취약점을 찾고자 부단히 방문했던 사이트이다. 아무래도 이미 존재하는 exploit들을 모아 놓은 사이트이기 때문에 Chromium에서 이미 봤던 코드들이 대부분이었고, 비교적 최신 exploit은 존재하지 않았다. 결론적으로 exploit-db에서도 원하는 바를 달성하지는 못했다.
 
-### Bugzilla
+### 6.3. Bugzilla
 ![image](https://user-images.githubusercontent.com/45416961/101606281-89dcc200-3a46-11eb-9fa9-0e962243c136.png)
 [WebKit Bugzilla](https://bugs.webkit.org/)에 report 되는 버그들을 모니터링 하면서 실제로 exploit에 사용될만한 취약점이 있는지 탐색할 수 있다. 다만 간단한 description과 패치 내역만 보고 특정 버그가 exploitable한지 판단할 수 있는 경험치가 요구된다. 그리고 Security issue의 경우 일반 사용자들에게 액세스 권한을 주지 않는 경우가 많다. 따라서 Bugzilla만 살펴보면서 취약성이 존재하는 케이스를 찾아내기란 모래알 속 진주 찾기와도 같다. 물론 시작하는 단계에서는 말이다.
-### WebKit regression test
+### 6.4. WebKit regression test
 > 아직 경험치가 많이 부족하다면 ChangeLog가 버그 탐색을 위한 좋은 입문 경로가 될 수 있다.
 
 WebKit repositorty를 조금만 들여다 보면 ChangeLog 상에 패치 내역이 아주 잘 정리되어 있다는 사실을 알 수 있다. `JSTests, LayoutTests` 디렉토리는 JavaScriptCore와 WebCore 각각에 대한 테스트 코드를 담고 있는데, 물론 이 폴더 내부에도 ChangeLog가 존재한다. ChangeLog의 패턴을 살펴보고 넘어가자.
@@ -364,7 +364,7 @@ WebKit repositorty를 조금만 들여다 보면 ChangeLog 상에 패치 내역�
 
 그러던 도중 WebCore 엔진에서 pc 레지스터 컨트롤이 가능한 취약점 하나를 발견할 수 있었다. 6.72 버전에서 디버깅을 통해 레지스터 값이 임의의 값으로 변경되는 것을 확인했고, 8.01 버전에서도 레지스터 값을 확인할 순 없었지만 에러 반응이 나타나는 것을 볼 수 있었다. 다만 해당 취약점 하나만으로는 exploit을 할 수 없기에 info leak 취약점을 탐색해야만 했다. 프로젝트 기간 동안 쓸만한 info leak 취약점은 발견하지 못했다. 비록 프로젝트는 끝났지만 Future work로 시도해보면 좋을 것 같다.
 
-## Reference
+## 7. Reference
 ><b id="foot1">[[1](#head1)]</b> Konstantin Serebryany; Derek Bruening; Alexander Potapenko; Dmitry Vyukov. ["AddressSanitizer: a fast address sanity checker"(PDF)](https://www.usenix.org/system/files/conference/atc12/atc12-final39.pdf). Proceedings of the 2012 USENIX conference on Annual Technical Conference.<br>
 ><b id="foot2">[[2](#head2)]</b> [MemorySanitizer - Clang 12 Documentation](https://clang.llvm.org/docs/MemorySanitizer.html)<br>
 ><b id="foot3">[[3](#head3)]</b> [UndefinedBehaviorSanitizer - Clang 12 Documentation](https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html)<br>
