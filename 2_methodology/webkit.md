@@ -38,7 +38,7 @@ https://github.com/WebKit/webkit.git
 <br>
 
 #### 2. JSC 빌드
-<br><br>
+<br>
 
 JSC 빌드 명령어는 다음과 같다. `./webkit/Tools/Scripts/build-webkit --jsc-only --debug`
 <br>
@@ -103,3 +103,7 @@ EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
 
 `gtk` : gtk 모드로 빌드함
 <br>
+
+#### 4. PS4 Webkit 빌드
+
+
