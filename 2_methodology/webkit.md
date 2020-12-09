@@ -12,6 +12,7 @@ APPLE 에서 개발한 Safari, Chrome 등의 브라우저에서 사용되는 Ope
 2. JSC 빌드
 3. GTK 빌드
 4. PS4 Webkit 빌드
+5. Docker 환경
 
 #### 1. Webkit download
 
@@ -94,7 +95,7 @@ EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
 
 <br>
 
-다음과 같은 선수 작업을 마무리 한 뒤 `/webkit/Tools/Scripts/build-webkit --gtk --debug` 를 실행하면 된다.
+다음과 같은 선수 작업을 마무리 한 뒤 `/webkit/Tools/Scripts/build-webkit --gtk --debug` 를 실행하면 된다. ( 실행 할 때 RAM 16GB 정도 할당 권장 )
 
 <br>
 
@@ -106,4 +107,30 @@ EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
 
 #### 4. PS4 Webkit 빌드
 
+<br>
 
+PS4 Webkit은 `https://doc.dl.playstation.net/doc/ps4-oss/webkit.html` 이 곳에서 다운 받을 수 있다.
+
+<br><br>
+
+다운을 받은 뒤  열어 보면<br>
+( 8.00 기준 )
+
+<img width="278" alt="webkit" src="https://user-images.githubusercontent.com/47859343/101600855-3adf5e80-3a3f-11eb-95d7-a170b238a0dc.png">
+
+<br>
+다음과 같이 WebKit-601.2.7-800과 WebKit-606.4.6-800 두 개의 폴더가 있음을 확인 할 수 있다.<br><br>
+
+추정상 JSTest와 LayoutTest로 분류해 둔거 같다.
+<br>
+또한 606 version만 빌드가 되고, GTK는 아예 빌드가 안 된다.<br>
+그 외에 JSC 빌드는 기존 Webkit과 똑같다. 
+
+<br>
+
+#### 5. Docker 환경
+<br>
+
+`https://hub.docker.com/r/gustjr1444/webkit/tags?page=1&ordering=last_updated` 위 링크에 들가면 그동안 우리가 취약점 분석을 위해 구축해둔 Webkit Docker 환경들을 다운 받을 수 있다.
+<br>
+여러 CVE 취약점 발생 환경부터, Webcore 분석 , ps4 Webkit 들을 구축해 두었으니, 활용하면 좋을 것 같다.
