@@ -138,17 +138,59 @@ PS4 Webkit은 `https://doc.dl.playstation.net/doc/ps4-oss/webkit.html` 이 곳�
 
 # <strong>PS4 WebKit의 특징</strong>
 1. NO JIT
-2. NO GC
+2. NO Garbage Collector
 3. NO WASM
 
 #### 1. NO JIT
 
 <br>
 browser exploit 에서 주로 사용하는 기법이 JIT을 활용해서 fake object 와 RWX 메모리 영역을 만들어서 공격을 시도하는 것인데 해당 PS4의 브라우저에서는 JIT이 꺼져있다.
+<br><br>
+
+<img width="1639" alt="스크린샷 2020-12-09 오후 7 43 46" src="https://user-images.githubusercontent.com/47859343/101619723-011a5200-3a57-11eb-9e6e-d2813fca28fb.png">
+
+<br>
+다음과 같이 UART LOG로 확인해 보면 JIT이 비활성화 되있는 것을 알 수 있다.
+
+<br><br>
+
+#### 2. NO Garbage Collector
+
+JIT과 마찬가지로 browser exploit에서 활용되는 Garbage Collector도 PS4에서 꺼져있다.
+<br><br>
+
+<img width="732" alt="스크린샷 2020-12-09 오후 7 44 04" src="https://user-images.githubusercontent.com/47859343/101620296-b4834680-3a57-11eb-830f-620004bc519d.png">
+<br>
+마찬가지로 UART LOG를 보면 꺼져있음을 확인 할 수 있다.
+
+<br><br>
+
+#### 3. NO WASM
+
 <br>
 
-![jit](https://user-images.githubusercontent.com/47859343/101618386-45a4ee00-3a55-11eb-94e7-807c7fbbe3e3.png)
+WebAssembly 또한 PS4 브라우저에서 지원을 안한다. 다음과 같이 WebAssembly 객체를 만들때 오류가 발생하면 alert로 메세지를 띄우게 테스트를 진행하면
 
+```javascript
+<!DOCTYPE html>
+<html>
+        <head>
+        </head>
+        <body>
+                <script>
+                        try{
+                                var memory = new WebAssembly.Memory({initial:10, maximum:100});
+                        }catch(error){
+                                alert("NO WASM");
+                        }
+                </script>
+        </body>
+</html>
+```
+<br>
 
+![nowasm](https://user-images.githubusercontent.com/47859343/101622847-ea75fa00-3a5a-11eb-9d8a-b89b397c4a2f.jpeg)
 
+<br>
+다음과 같이 PS4에서 오류가 발생하여 "NO WASM"이 출력 되는 것을 확인 할 수 있다.
 
