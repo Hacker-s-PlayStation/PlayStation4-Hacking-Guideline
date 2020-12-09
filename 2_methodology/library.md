@@ -4,11 +4,21 @@
 * Uart Log를 보다가 플레이스테이션 4에서 외부 사이트에서 파일을 가져오는 것을 확인
 ![image](https://user-images.githubusercontent.com/39231485/101589311-86880d00-3a2b-11eb-9906-aafc7b2b666e.png)
 ### 새로운 방법론
-* 기존에 WebKit, Freebsd 취약점을 사용하는 Jailbreak와는 다르게 프로세스 안에 있는 라이브러리의 취약점을 사용하는 것을 고안해봤다.<br><br>
-
-## sprx를 so파일로 바꾸기
-* 플레이스테이션 4 안의 파일들은 모두 암호화가 되어있기 때문에 아래에서 복호화된 펌웨어를 사용해야 한다.
+* 기존에 WebKit, Freebsd 취약점을 사용하는 Jailbreak와는 다르게 프로세스 안에 있는 라이브러리의 취약점을 사용하는 것을 고안해봤다.
+  * 라이브러리 내의 취약점을 찾기 위해서 소스 코드 오디팅, 라이브러리 함수를 대상으로 퍼징을 시도한다.
+### 파일 복호화
+* 플레이스테이션 4 안의 파일들은 모두 암호화가 되어있기 때문에 아래에서 복호화된 펌웨어를 사용해야 한다.<br>
 [사이트](https://darthsternie.net/ps4-decrypted-firmwares/)
+
+## 소스코드 오디팅 준비
+### 라이브러리 함수 심볼 복구
+복호화된 sprx를 아이다로 열었을 때, 심볼은 존재하지 않는다.
+![image](https://user-images.githubusercontent.com/39231485/101623622-0f1ea180-3a5c-11eb-8f63-9687c8a3624d.png)
+
+하지만 심볼 대신 NID라는 것을 통하여 함수 주소와 매치시키는데, 만약 특정 NID가 어떤 함수명인지 안다면 심볼을 복구 할 수 있을 것이다.
+[사이트](https://github.com/SocraticBliss/ps4_module_loader) 
+## 퍼징 준비
+### sprx를 so파일로 바꾸기
 ### ps4 라이브러리
 ![image](https://user-images.githubusercontent.com/39231485/101594750-8e4caf00-3a35-11eb-891e-3102d8be47be.png)
   * ps4 라이브러리는 소니가 자체적으로 만든 sprx라는 포맷을 사용한다.
