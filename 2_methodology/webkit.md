@@ -196,7 +196,7 @@ PS4에서 오류가 발생하여 "ReferenceError: Can't find variable: WebAssemb
 
 <br><br>
 
-# <strong>PS4 WebKit의 특징</strong>
+# <strong>PS4 WebKit exploit 방법론</strong>
 1. Return Oriented Programming, Jump Oriented Programming
 
 #### 1. Return Oriented Programming, Jump Oriented Programming
