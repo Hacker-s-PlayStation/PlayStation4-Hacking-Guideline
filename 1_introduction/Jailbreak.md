@@ -19,12 +19,15 @@ Jailbreak를 통해 어떤 기능들을 사용할 수 있는지 살펴보기 위
 ![jailbreak](https://user-images.githubusercontent.com/40509850/101586509-fec5e280-39d9-11eb-9012-09aa04601f6d.PNG "그림 1 Jailbreak 기능")
 
 ### 1. 임의의 binary 실행
-Bin Loader 기능을 이용하여 임의의 binary payload를 PS4에서 실행할 수 있다. sleirsgoevy의 Jailbreak 도구에 있는 8cc를 이용하여 임의의 payload를 bin loader로 load가능한 bin파일을 만들 수 있다.
+Bin Loader 기능을 이용하여 임의의 binary payload를 PS4에서 실행할 수 있다. Bin Loader를 실행시킨 후, `nc -w 3 (PS4's ip) 9021 < (bin payload)`를 통해 Bin Loader에 binary파일을 전달하면 해당 payload를 동작시켜준다. sleirsgoevy의 Jailbreak 도구에 있는 8cc를 이용하여 임의의 payload를 bin loader로 load가능한 bin파일을 만드는 것도 가능하다. 그러나 binary파일의 크기는 65535byte를 넘어가면 안된다.
+
 ### 2. PS4 내 파일 탐색
-FTP 기능을 이용하면, FTP가 활성화 되면서 1337 Port가 열리게 된다. 해당 포트로 접속하면 PS4 내부의 파일 시스템을 탐색할 수 있다. [FileZilla](https://filezilla-project.org/)와 같은 프로그램을 사용하면 편리하게 접속이 가능하다. 그러나 라이브러리 파일들이 암호화가 되어있는 것으로 여겨져 파일을 바로 사용할 수는 없는 것으로 여겨진다.
+FTP 기능을 이용하면, FTP가 활성화 되면서 1337 Port가 열리게 된다. 해당 Port로 접속하면 PS4 내부의 파일 시스템을 탐색할 수 있다. [FileZilla](https://filezilla-project.org/)와 같은 프로그램을 사용하면 편리하게 접속이 가능하다. 그러나 라이브러리 및 binary 파일들이 암호화가 되어있는 것으로 여겨져 binary 파일을 바로 사용할 수는 없는 것으로 여겨진다.
+
 ### 3. UART Log 활성화
 Mira 기능을 이용하면, PS4의 설정창에 Debug Settings가 해금이 되며 여러 개발자 도구를 사용할 수 있게 되는 동시에 UART Log가 활성화된다. 하드웨어상에 존재하는 UART 포트를 연결하여 UART Log를 볼 수도 있지만, UART Log를 출력해주는 Port가 열리기 때문에 해당 Port에 접속하면 Log를 볼 수 있다. UART Log를 볼 수 있는 Port는 9998로, `nc (PS4's IP) 9998`을 통해 볼 수 있다. PS4의 IP는 `설정 > 시스템 > 시스템 정보`에서 확인할 수 있다.<br>
 UART Log를 통해 PS4에 연결된 하드웨어 정보, 게임 타이틀 코드 등 여러가지 디버깅 정보를 획득할 수 있는데, 흥미로운 점은 **Segmentation fault와 같은 crash가 날 경우, 아래와 같이 register 정보, backtrace 등 디버깅에 필요한 정보를 역시 출력해주기 때문에 분석에 용이하다.**
+
 ```
 # A user thread receives a fatal signal
 #
