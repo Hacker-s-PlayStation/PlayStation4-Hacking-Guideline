@@ -36,6 +36,26 @@
   * [사이트](https://github.com/SocraticBliss/ps4_module_loader)
 
 ## Hardware
+* Teensy Loader
+ * Tennsy 4.0, Teensy 2.0 보드에 원하는 동작을 수행하도록 프로그래밍하는 프로그램이다.
+ * 장점
+  * 운영체제마다 지원해주며 간편하다.
+ * 단점
+  * 없다.
+ * 다운로드 - https://www.pjrc.com/teensy/loader.html
+* realterm
+ * 시리얼 캡쳐 프로그램이다. PS4 하드웨어에서는 syscon dump를 할 때 사용한다.
+ * 장점
+  * GUI 지원하는 프로그램이라 사용하기 편하다.
+ * 단점
+  * 윈도우 운영체제만 지원한다.
+ * 다운로드 - https://sourceforge.net/projects/realterm/
+* SPIway
+ * 장점
+  * 사용하기 편하다.
+ * 단점
+  * 실행하기 위해서는 Python 2.7.2 버전 및 pyserial 2.5가 필요하다. Python 3점대 지원 안함.
+ * 다운로드 - git clone https://github.com/hjudges/NORway
 
 
 ### Contents
