@@ -222,8 +222,8 @@ dump 뿐만 아니라 write도 가능하다. 실제로 PS4에서 NOR 칩의 일�
 
 - [https://gbatemp.net/threads/ps4-nor-chip-repair-that-displays-signs-of-a-blod.569955/](https://gbatemp.net/threads/ps4-nor-chip-repair-that-displays-signs-of-a-blod.569955/)
 
-<br>
-<hr>
+
+---
 ### Contents
 [메인화면](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/README.md)<br>
 #### PS4 소개
