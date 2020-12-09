@@ -181,7 +181,7 @@ WebAssembly 또한 PS4 브라우저에서 지원을 안한다. 다음과 같이 
                         try{
                                 var memory = new WebAssembly.Memory({initial:10, maximum:100});
                         }catch(error){
-                                alert("NO WASM");
+                                alert(error);
                         }
                 </script>
         </body>
@@ -189,8 +189,8 @@ WebAssembly 또한 PS4 브라우저에서 지원을 안한다. 다음과 같이 
 ```
 <br>
 
-![nowasm](https://user-images.githubusercontent.com/47859343/101622847-ea75fa00-3a5a-11eb-9d8a-b89b397c4a2f.jpeg)
+![nowasm](https://user-images.githubusercontent.com/47859343/101623898-73d9fc00-3a5c-11eb-85b9-52b1717e9d80.jpeg)
 
 <br>
-다음과 같이 PS4에서 오류가 발생하여 "NO WASM"이 출력 되는 것을 확인 할 수 있다.
+PS4에서 오류가 발생하여 "ReferenceError: Can't find variable: WebAssembly"이 출력 되는 것을 확인 할 수 있다.
 
