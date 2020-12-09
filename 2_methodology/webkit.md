@@ -1,19 +1,19 @@
-#<strong>개요</strong>
+# <strong>개요</strong>
 
 1. Webkit 이란?
-####1. Webkit 이란?
+#### 1. Webkit 이란?
 
 APPLE 에서 개발한 Safari, Chrome 등의 브라우저에서 사용되는 Open Source 렌더링 엔진이다. PS4 내부 브라우저에서도 Webkit을 사용한다. 그렇기에 우리는 해당 PS4의 웹킷을 attack vector로 삼았다.
 
 그러나 Webkit에서 User-Agent에 나오는 버전을 <strong>Freezing</strong> 하고 있어서 정확한 버전을 확인 할 수 없었고, PS4 Webkit ChangeLog를 확인해 보니 2018-12-16 이후로 SONY에서 자체적으로 fork를 떠 커스터마이징 한 것으로 추정 된 다.
 
-#<strong>WebKit 빌드</strong>
+# <strong>WebKit 빌드</strong>
 1. Webkit download
 2. JSC 빌드
 3. GTK 빌드
 4. PS4 Webkit 빌드
 
-####1. Webkit download
+#### 1. Webkit download
 
 https://github.com/WebKit/webkit.git
 
@@ -28,10 +28,18 @@ https://github.com/WebKit/webkit.git
 `ruby`
 `libicu-dev`
 
-####2. JSC 빌드
-
+#### 2. JSC 빌드
+<br>
 빌드 명령어는 다음과 같다.
 `./webkit/Tools/Scripts/build-webkit --jsc-only --debug`
+<br>
 
 `jsc-only` : jsc만 빌드함
 `debug` : debug 모드로 빌드함 ( debug 옵션이 없으면 나중에 분석 할 때 describe라는 객체 등의 주소를 알어오는 함수를 못 사용함 )
+
+<br>
+<br>
+이후 다음과 같이 JSC를 실행하면 command linen 이 뜨는 것을 확인 할 수 있다.
+<br>
+
+`./webkit/WebKitBuild/Debug/bin/jsc`
