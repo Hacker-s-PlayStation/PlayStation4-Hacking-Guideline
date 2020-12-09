@@ -35,6 +35,7 @@ https://github.com/WebKit/webkit.git
 
 또한 version에 따라 설치에 필요한 것들이 다를 수 있으니 그때 마다 설치해 주어야 한다.
 
+<br>
 #### 2. JSC 빌드
 <br>
 
@@ -58,6 +59,7 @@ seohojin@ubuntu:~/Desktop$ ./webkit/WebKitBuild/Debug/bin/jsc
 >>> 
 ```
 <br>
+
 #### 3. GTK 빌드
 
 <br>
@@ -87,3 +89,16 @@ GTK를 빌드하기 위해서는 먼저 다음과 같은 선수 작업이 필요
 다음 링크들을 참고하여 설치한 뒤 `/webkit/Source/WebKit/UIProcess/gtk/WaylandCompositor.cpp` 파일에 `#include <EGL/eglmesaext.h>` 헤더를 한 줄 추가해야 한다. 
 <br>
 EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
+
+<br>
+
+다음과 같은 선수 작업을 마무리 한 뒤 `/webkit/Tools/Scripts/build-webkit --gtk --debug` 를 실행하면 된다.
+
+<br>
+
+`debug` : debug 모드로 빌드함 ( debug 모드가 아니면 나중에 분석 할 때 describe라는 객체 등의 주소를 알어오는 함수를 못 사용함 )
+
+<br>
+
+`gtk` : gtk 모드로 빌드함
+<br>
