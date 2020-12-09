@@ -8,8 +8,8 @@
 ---
 
 # Jailbreak
-Jailbreak란, 프로그램의 취약점을 이용하여 PS4의 높은 권한을 획득하여 기존의 서비스에서는 사용할 수 없는 기능을 사용할 수 있게 되는 것을 일컫는다. PS4의 경우, 브라우저의 취약점과 커널의 취약점을 chaining하여 Jailbreak를 하는 경우가 일반적이다. PS4는 WebKit기반의 browser를 사용하고, FreeBSD 9 기반의 OS인 Orbis OS를 사용하기 때문에 이 둘의 취약점을 chaining하여 Jailbreak를 하게된다.<br>
-2020년 12월 9일 기준, Jailbreak는 PS4 펌웨어 6.72버전까지 진행이 되었다. sleirsgoevy가 6.72 Jailbreak 도구를 만들었으며 소스코드는 [여기](https://github.com/sleirsgoevy/ps4jb)에서 확인할 수 있다. 자세한 내용은 [PS4 developer wiki](https://www.psdevwiki.com/ps4/Working_Exploits)를 참고하면 된다.
+Jailbreak란, 프로그램의 취약점을 이용하여 PS4의 높은 권한을 획득하여 기존의 서비스에서는 사용할 수 없는 기능을 사용할 수 있게 되는 것을 일컫는다. PS4의 경우, 브라우저의 취약점과 커널의 취약점을 chaining하여 Jailbreak를 하는 경우가 일반적이다. PS4는 WebKit기반의 browser를 사용하고, FreeBSD 9 기반의 OS인 Orbis OS를 사용한다.<br>
+2020년 12월 9일 기준, PS4 펌웨어는 8.01까지 업데이트가 된 상황에서 Jailbreak는 PS4 펌웨어 6.72버전까지 진행이 되었다. sleirsgoevy가 6.72 Jailbreak 도구를 만들었으며 소스코드는 [여기](https://github.com/sleirsgoevy/ps4jb)에서 확인할 수 있다. Jailbreak된 PS4 펌웨어 버전 및 취약점에 대한 자세한 내용은 [PS4 developer wiki](https://www.psdevwiki.com/ps4/Working_Exploits)를 참고하면 된다.
 
 ### ※ 주의
 > PS4 펌웨어 6.72버전을 기준으로 기술이 되어있다. **본 프로젝트의 목적은 PS4의 취약점을 탐색하여 최신 펌웨어에서의 Jailbreak 가능성을 확인하고 이를 패치하여 PS4 플랫폼 위에 형성되어있는 지식재산들을 보호하는 것이 목적으로, Jailbreak를 악용하는 것이 아님을 밝힌다.** 위 목적을 달성하기 위해서 참고했던 자료 및 도구들을 본 문서에 기술한다. **본 프로젝트에서 참고한 Jailbreak 도구의 악용을 통해 발생하는 불이익에 대해서 본 프로젝트 팀원들은 책임을 지지 않을 것을 분명하게 밝힌다.**
@@ -19,7 +19,7 @@ Jailbreak를 통해 어떤 기능들을 사용할 수 있는지 살펴보기 위
 ![jailbreak](https://user-images.githubusercontent.com/40509850/101586509-fec5e280-39d9-11eb-9012-09aa04601f6d.PNG "그림 1 Jailbreak 기능")
 
 ### 1. 임의의 binary 실행
-Bin Loader 기능을 이용하여 임의의 binary payload를 PS4에서 실행할 수 있다. Bin Loader를 실행시킨 후, `nc -w 3 (PS4's ip) 9021 < (bin payload)`를 통해 Bin Loader에 binary파일을 전달하면 해당 payload를 동작시켜준다. sleirsgoevy의 Jailbreak 도구에 있는 [8cc](https://github.com/sleirsgoevy/ps4-rop-8cc)를 이용하여 임의의 payload를 bin loader로 load가능한 bin파일을 만드는 것도 가능하다. 그러나 binary파일의 크기는 65536byte를 넘어가면 안된다.<sup>[1](#foot1)</sup>
+Bin Loader 기능을 이용하여 임의의 binary payload를 PS4에서 실행할 수 있다. Bin Loader를 실행시킨 후, `nc -w 3 (PS4's ip) 9021 < (bin payload)`를 통해 Bin Loader에 binary파일을 전달하면 해당 payload가 동작한다. sleirsgoevy의 Jailbreak 도구에 있는 [8cc](https://github.com/sleirsgoevy/ps4-rop-8cc)를 이용하여 임의의 payload를 bin loader로 load가능한 bin파일을 만드는 것도 가능하다. 그러나 binary파일의 크기는 65536byte를 넘어가면 안된다.<sup>[1](#foot1)</sup>
 
 ### 2. PS4 내 파일 탐색
 FTP 기능을 이용하면, FTP가 활성화 되면서 1337 Port가 열리게 된다. 해당 Port로 접속하면 PS4 내부의 파일 시스템을 탐색할 수 있다. [FileZilla](https://filezilla-project.org/)와 같은 프로그램을 사용하면 편리하게 접속이 가능하다. 그러나 라이브러리 및 binary 파일들이 암호화가 되어있는 것으로 여겨져 binary 파일을 바로 사용할 수는 없는 것으로 여겨진다.
