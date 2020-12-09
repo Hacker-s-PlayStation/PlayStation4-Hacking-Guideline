@@ -198,7 +198,7 @@ WebKit 같은 경우는 빌드를 할 때 perl 기반의 스크립트를 이용�
 
 #### Step 1 : 컴파일 플래그 설정
 컴파일 플래그를 설정할 수 있는 파일은 `/webkit/Source/cmake/WebKitCompilerFlags.cmake`이다. 이 파일의 내용을 수정하여 우리가 원하는 Sanitizer를 붙일 수 있다. 참고로 최신 버전의 `WebKitCompilerFlags.cmake` 에는 address, undefined, thread, memory, leak과 같은 flag를 적용할 수 있게끔 분기 로직이 존재한다. (아래 코드 참고)
-```c
+```bash
 foreach (SANITIZER ${ENABLE_SANITIZERS})
     if (${SANITIZER} MATCHES "address")
         WEBKIT_PREPEND_GLOBAL_COMPILER_FLAGS("-fno-omit-frame-pointer -fno-optimize-sibling-calls")
@@ -231,7 +231,7 @@ endforeach ()
 
 하지만 본 프로젝트에서는 이전에 언급했듯 2018-12-16 기준으로 fork 한 WebKit을 이용했기 때문에, 과정이 다소 복잡해진다. (아래 코드 참고)
 
-```c
+```bash
 if (ENABLE_ADDRESS_SANITIZER)
     WEBKIT_PREPEND_GLOBAL_COMPILER_FLAGS(-fno-omit-frame-pointer
                                             -fno-optimize-sibling-calls)
@@ -294,10 +294,10 @@ export CXX=/usr/bin/clang++
 ❯ code CMakeLists.txt
 ```
 오류가 나는 부분이 로그에 남을텐데 해당 라인 넘버로 이동한 후 그 위에 4줄의 코드를 추가해 주면 된다.
-```c
+```bash
 set(THREADS_PREFER_PTHREAD_FLAG ON) // Where the error occurred
 ```
-```c
+```bash
 //////////////// Added //////////////////
 set(CMAKE_THREAD_LIBS_INIT "-lpthread")
 set(CMAKE_HAVE_THREADS_LIBRARY 1)
