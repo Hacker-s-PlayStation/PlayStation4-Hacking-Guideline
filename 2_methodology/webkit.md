@@ -35,6 +35,7 @@ https://github.com/WebKit/webkit.git
 <br>
 
 `jsc-only` : jsc만 빌드함
+<br>
 `debug` : debug 모드로 빌드함 ( debug 옵션이 없으면 나중에 분석 할 때 describe라는 객체 등의 주소를 알어오는 함수를 못 사용함 )
 
 <br>
