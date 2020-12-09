@@ -19,7 +19,7 @@ Jailbreak를 통해 어떤 기능들을 사용할 수 있는지 살펴보기 위
 ![jailbreak](https://user-images.githubusercontent.com/40509850/101586509-fec5e280-39d9-11eb-9012-09aa04601f6d.PNG "그림 1 Jailbreak 기능")
 
 ### 1. 임의의 binary 실행
-Bin Loader 기능을 이용하여 임의의 binary payload를 PS4에서 실행할 수 있다. Bin Loader를 실행시킨 후, `nc -w 3 (PS4's ip) 9021 < (bin payload)`를 통해 Bin Loader에 binary파일을 전달하면 해당 payload를 동작시켜준다. sleirsgoevy의 Jailbreak 도구에 있는 8cc를 이용하여 임의의 payload를 bin loader로 load가능한 bin파일을 만드는 것도 가능하다. 그러나 binary파일의 크기는 65535byte를 넘어가면 안된다.
+Bin Loader 기능을 이용하여 임의의 binary payload를 PS4에서 실행할 수 있다. Bin Loader를 실행시킨 후, `nc -w 3 (PS4's ip) 9021 < (bin payload)`를 통해 Bin Loader에 binary파일을 전달하면 해당 payload를 동작시켜준다. sleirsgoevy의 Jailbreak 도구에 있는 [8cc](https://github.com/sleirsgoevy/ps4-rop-8cc)를 이용하여 임의의 payload를 bin loader로 load가능한 bin파일을 만드는 것도 가능하다. 그러나 binary파일의 크기는 65535byte를 넘어가면 안된다.
 
 ### 2. PS4 내 파일 탐색
 FTP 기능을 이용하면, FTP가 활성화 되면서 1337 Port가 열리게 된다. 해당 Port로 접속하면 PS4 내부의 파일 시스템을 탐색할 수 있다. [FileZilla](https://filezilla-project.org/)와 같은 프로그램을 사용하면 편리하게 접속이 가능하다. 그러나 라이브러리 및 binary 파일들이 암호화가 되어있는 것으로 여겨져 binary 파일을 바로 사용할 수는 없는 것으로 여겨진다.
