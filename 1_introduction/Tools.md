@@ -1,6 +1,6 @@
 ### Page Contents
-[1. Debugging](#Debugging)<br>
-[2. Hardware](#Hardware)
+  * [Debugging](#debugging)
+  * [Hardware](#hardware)
 # Tools
 ## Debugging
 * ps4gdb_672
