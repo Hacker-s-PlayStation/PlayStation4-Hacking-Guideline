@@ -134,3 +134,21 @@ PS4 Webkit은 `https://doc.dl.playstation.net/doc/ps4-oss/webkit.html` 이 곳�
 `https://hub.docker.com/r/gustjr1444/webkit/tags?page=1&ordering=last_updated` 위 링크에 들가면 그동안 우리가 취약점 분석을 위해 구축해둔 Webkit Docker 환경들을 다운 받을 수 있다.
 <br><br>
 여러 CVE 취약점 발생 환경부터, Webcore 분석 , ps4 Webkit 들을 구축해 두었으니, 활용하면 좋을 것 같다.
+<br><br>
+
+# <strong>PS4 WebKit의 특징</strong>
+1. NO JIT
+2. NO GC
+3. NO WASM
+
+#### 1. NO JIT
+
+<br>
+browser exploit 에서 주로 사용하는 기법이 JIT을 활용해서 fake object 와 RWX 메모리 영역을 만들어서 공격을 시도하는 것인데 해당 PS4의 브라우저에서는 JIT이 꺼져있다.
+<br>
+
+![jit](https://user-images.githubusercontent.com/47859343/101618386-45a4ee00-3a55-11eb-94e7-807c7fbbe3e3.png)
+
+
+
+
