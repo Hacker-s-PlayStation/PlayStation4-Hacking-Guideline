@@ -194,3 +194,12 @@ WebAssembly 또한 PS4 브라우저에서 지원을 안한다. 다음과 같이 
 <br>
 PS4에서 오류가 발생하여 "ReferenceError: Can't find variable: WebAssembly"이 출력 되는 것을 확인 할 수 있다.
 
+<br><br>
+
+# <strong>PS4 WebKit의 특징</strong>
+1. Return Oriented Programming, Jump Oriented Programming
+
+#### 1. Return Oriented Programming, Jump Oriented Programming
+
+<br>
+
