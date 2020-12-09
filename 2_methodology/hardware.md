@@ -1,4 +1,5 @@
-### Hardware
+### Page Contents
+# Hardware
 - [UART Log](#uart-log)
   - [준비물](#준비물)
   - [Step 1 : UART 포트 확인](#step-1--uart-포트-확인)
