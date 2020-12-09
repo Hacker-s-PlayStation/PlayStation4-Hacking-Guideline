@@ -1,18 +1,18 @@
-- [UART Log<hr>](#uart-loghr)
+- [UART Log](#uart-log)
   - [준비물](#준비물)
   - [Step 1 : UART 포트 확인](#step-1--uart-포트-확인)
   - [Step 2 : UART 포트 납땜](#step-2--uart-포트-납땜)
   - [Step 3 : USB to TTL Serial Cable 연결](#step-3--usb-to-ttl-serial-cable-연결)
   - [Step 4 : UART Log 확인](#step-4--uart-log-확인)
   - [결과](#결과)
-- [syscon dump<hr>](#syscon-dumphr)
+- [syscon dump](#syscon-dump)
   - [준비물](#준비물-1)
   - [Step 1 : syscon 디솔더링](#step-1--syscon-디솔더링)
   - [Step 2 : syscon과 Teensy 4.0 보드 연결](#step-2--syscon과-teensy-40-보드-연결)
   - [Step 3 : Teensy4.0 programming](#step-3--teensy40-programming)
   - [Step 4 : syscon dump](#step-4--syscon-dump)
   - [dump 결과](#dump-결과)
-- [sflash dump<hr>](#sflash-dumphr)
+- [sflash dump](#sflash-dump)
   - [Step 1 : sflash 와 Teensy 2.0 보드 연결](#step-1--sflash-와-teensy-20-보드-연결)
   - [Step 2 : NORway 환경 구성](#step-2--norway-환경-구성)
   - [Step 3 : Teensy Loader](#step-3--teensy-loader)
@@ -20,13 +20,13 @@
   - [Step 5 : SPIway - dump](#step-5--spiway---dump)
   - [dump 결과](#dump-결과-1)
   - [추가](#추가)
-- [Reference<hr>](#referencehr)
+- [Reference](#reference)
   - [Contents](#contents)
     - [PS4 소개](#ps4-소개)
     - [프로젝트 접근 방법론](#프로젝트-접근-방법론)
     - [결론](#결론)
   
-## UART Log<hr>
+## UART Log
 
 ### 준비물
 - 인두기, 납, JumperWire
@@ -63,7 +63,7 @@ USB to TTL Serial Cable에 Step 2에서 납땜한 JumperWire를 연결해준다.
 UART Log를 보고 싶으면 Jailbreak 해놓은 PS4에서 ps4debug.bin 파일을 bin loader로 올리면 확인할 수 있다. 하지만 이는 하드웨어적으로 연결 안해도 nc를 이용하여 포트 접속만 해도 확인할 수 있으니 하드웨어적인 성과는 없었다.
 
 
-## syscon dump<hr>
+## syscon dump
 
 ### 준비물
 - 열풍기, 인두기세트(납, solder wick, 플럭스)
@@ -119,7 +119,7 @@ realterm 프로그램을 사용하여 덤프를 뜬다.
 
 만약 덤프가 정상적으로 되지 않고 실패했을 때는 계속 `Not Used`만 반복해서 떴었다.
 
-## sflash dump<hr>
+## sflash dump
 
 ### Step 1 : sflash 와 Teensy 2.0 보드 연결
 
@@ -215,14 +215,15 @@ TeensyLoader를 다운로드 받은 뒤 실행해 준다. git clone 받은 폴�
 
 dump 뿐만 아니라 write도 가능하다. 실제로 PS4에서 NOR 칩의 일부 섹션이 손상되어 BLOD (Blue Light of Death) 문제가 발생한 경우, syscon ROM을 덤프하고 00 00 00 00.. 영역을 FF FF FF FF... 로 덮어 쓴 뒤 vwrite 해 줌으로써 수리를 하기도 했다. 이 write 기능을 추후에 이용할 수 있지 않을까 싶다.
 
-## Reference<hr>
+## Reference
 - [SYSGLITCH_DOWNGRADE (2).pdf](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/37e4d1b3-06ea-4ed1-ab61-ce45f6146c7b/SYSGLITCH_DOWNGRADE_(2).pdf)
   
 - [https://www.psxhax.com/threads/ps4-sysglitch-tool-and-syscon-glitching-pinout-by-vvildcard777.7545/](https://www.psxhax.com/threads/ps4-sysglitch-tool-and-syscon-glitching-pinout-by-vvildcard777.7545/)
 
 - [https://gbatemp.net/threads/ps4-nor-chip-repair-that-displays-signs-of-a-blod.569955/](https://gbatemp.net/threads/ps4-nor-chip-repair-that-displays-signs-of-a-blod.569955/)
 
-
+<br>
+<hr>
 ### Contents
 [메인화면](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/README.md)<br>
 #### PS4 소개
