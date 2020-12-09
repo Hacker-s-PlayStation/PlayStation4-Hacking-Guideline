@@ -11,8 +11,8 @@
 #### 결론
 [결론](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/3_conclusion/conclusion.md)
 
-#Tools
-##Debugging
+# Tools
+## Debugging
 * ps4gdb_672
   * 플레이스테이션 4의 내부 프로세스를 remote gdb로 디버깅할 수 있다.
   * 장점
@@ -42,4 +42,4 @@
   * 사이트 : https://www.psxhax.com/threads/ps4cheater-ps4-cheater-homebrew-app-to-find-game-cheat-codes.4529/page-222#post-157094
 
 
-##Hardware
+## Hardware
