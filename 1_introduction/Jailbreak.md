@@ -1,9 +1,11 @@
 ### Page Contents
 * [Jailbreak 개요 및 주의사항](#jailbreak)
 * [Jailbreak를 통해 무엇을 할 수 있는가](#jailbreak를-통해-무엇을-할-수-있는가)
-    + [1. 임의의 binary 실행](#1.-임의의-binary-실행)
-    + [2. PS4 내 파일 탐색](#2.-PS4-내-파일-탐색)
-    + [3. UART 활성화](#3.-UART-Log-활성화)
+    + [1. 임의의 binary 실행](#1-임의의-binary-실행)
+    + [2. PS4 내 파일 탐색](#2-PS4-내-파일-탐색)
+    + [3. UART 활성화](#3-UART-Log-활성화)
+
+---
 
 # Jailbreak
 Jailbreak란, 프로그램의 취약점을 이용하여 PS4의 높은 권한을 획득하여 기존의 서비스에서는 사용할 수 없는 기능을 사용할 수 있게 되는 것을 일컫는다. PS4의 경우, 브라우저의 취약점과 커널의 취약점을 chaining하여 Jailbreak를 하는 경우가 일반적이다. PS4는 WebKit기반의 browser를 사용하고, FreeBSD 9 기반의 OS인 Orbis OS를 사용하기 때문에 이 둘의 취약점을 chaining하여 Jailbreak를 하게된다.<br>
