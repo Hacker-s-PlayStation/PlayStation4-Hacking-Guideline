@@ -30,7 +30,7 @@
 ## 1. Hardware Overview
 > 본 프로젝트에서 하드웨어적으로 syscon dump와 sflash dump를 진행하게된 계기는 다음과 같다.
 
-시스템 펌웨어 버전과 제조 모드 정보를 syscon의 snvs에 저장되고, syscon은 보드의 거의 모든 항목에 대한 클럭/전원 관리, 대부분의 프로세서 부팅, 기타 저속 주변 장치에 대한 프록시 역할 등 다양한 역할을 하기 때문에 dump를 해보았다. 또한 Aeolia용 펌웨어 업데이트 패키지는 sflash에 저장되기 때문에 sflash도 dump를 진행해봤다. 추가적으로 새로운 칩에 dump한 내용을 백업해 두면, 추후 버전을 업데이트 하더라도 다시 백업해둔 칩으로 교체하여 다운그레이드를 할 수 있다.
+시스템 펌웨어 버전과 제조 모드 정보는 syscon의 snvs에 저장되고, syscon은 보드의 거의 모든 항목에 대한 클럭/전원 관리, 대부분의 프로세서 부팅, 기타 저속 주변 장치에 대한 프록시 역할 등 다양한 역할을 하기 때문에 dump를 해보았다. 또한 Aeolia용 펌웨어 업데이트 패키지는 sflash에 저장되기 때문에 sflash도 함께 dump를 진행해봤다. 추가적으로 새로운 칩에 dump한 내용을 백업해 두면, 추후 버전을 업데이트 하더라도 다시 백업해둔 칩으로 교체하여 다운그레이드를 할 수 있다.
 
 ## 2. UART Log
 
@@ -140,7 +140,7 @@ realterm 프로그램을 사용하여 덤프를 뜬다.
 디솔더링은 syscon과 똑같이 진행하면 된다. syscon dump를 참고하면 된다. sflash를 디솔더링 하고, Teensy 2.0 보드(이하 Teensy2.0)에 연결해줬다. 연결할 때는 Wildcard가 제공해준 daigram과 위 사진을 보면서 연결하였다.
 
 처음에 Teensy2.0을 연결하면 시리얼 포트로 인식이 되지 않을 것이다. Teensy를 COM 포트로 인식되게끔 하려면 아두이노 프로그램으로 한 번 쯤은 프로그래밍을 해줘야 한다.
-자세한 내용은 https://www.pjrc.com/teensy/troubleshoot.html 이 사이트에 잘 나와 있다.
+자세한 내용은 [여기](https://www.pjrc.com/teensy/troubleshoot.html)에 잘 나와 있다.
 
 ![com_serial](https://user-images.githubusercontent.com/48618245/101597743-79bee580-3a3a-11eb-9f5f-af34885ec829.png)
 
@@ -225,13 +225,10 @@ TeensyLoader를 다운로드 받은 뒤 실행해 준다. git clone 받은 폴�
 dump 뿐만 아니라 write도 가능하다. 실제로 PS4에서 NOR 칩의 일부 섹션이 손상되어 BLOD (Blue Light of Death) 문제가 발생한 경우, syscon ROM을 덤프하고 `00 00 00 00..` 영역을 `FF FF FF FF...` 로 덮어 쓴 뒤 vwrite 해 줌으로써 수리를 하기도 했다. 이 write 기능을 추후에 이용할 수 있지 않을까 싶다.
 
 ## 5. Reference
-- [SYSGLITCH_DOWNGRADE (2).pdf](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/37e4d1b3-06ea-4ed1-ab61-ce45f6146c7b/SYSGLITCH_DOWNGRADE_(2).pdf)
-  
-- [https://www.psxhax.com/threads/ps4-sysglitch-tool-and-syscon-glitching-pinout-by-vvildcard777.7545/](https://www.psxhax.com/threads/ps4-sysglitch-tool-and-syscon-glitching-pinout-by-vvildcard777.7545/)
-
-- [https://gbatemp.net/threads/ps4-nor-chip-repair-that-displays-signs-of-a-blod.569955/](https://gbatemp.net/threads/ps4-nor-chip-repair-that-displays-signs-of-a-blod.569955/)
-
-- [https://fail0verflow.com/blog/2018/ps4-syscon/](https://fail0verflow.com/blog/2018/ps4-syscon/)
+> - [SYSGLITCH_DOWNGRADE (2).pdf](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/37e4d1b3-06ea-4ed1-ab61-ce45f6146c7b/SYSGLITCH_DOWNGRADE_(2).pdf)
+> - [PS4 SysGlitch Tool and SysCon Glitching Pinout by VVildCard777](https://www.psxhax.com/threads/ps4-sysglitch-tool-and-syscon-glitching-pinout-by-vvildcard777.7545/)
+> - [PS4 NOR chip repair that displays signs of a BLOD](https://gbatemp.net/threads/ps4-nor-chip-repair-that-displays-signs-of-a-blod.569955/)
+> - [PS4 Aux Hax 2: Syscon](https://fail0verflow.com/blog/2018/ps4-syscon/)
 
 
 ---
