@@ -496,7 +496,8 @@ int main(){
 
     func();
     return 0;
-}```
+}
+```
 위 소스코드를 사용하여 함수가 잘 실행되는지 테스트해볼 것이다.
 ![image](https://user-images.githubusercontent.com/39231485/101734324-70e61680-3b03-11eb-8315-cca6132f0dfe.png)
 dlsym이 작동하지 않아서 이 함수의 오프셋을 넣고 함수 포인터를 호출시켰다.
