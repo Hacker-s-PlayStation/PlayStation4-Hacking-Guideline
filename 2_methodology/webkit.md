@@ -35,10 +35,8 @@
 ---
 
 
-# <strong>개요</strong>
-
-1. Webkit 이란?
-#### 1. Webkit 이란?
+## 1. 개요
+### 1.1. WebKit 이란?
 
 APPLE 에서 개발한 Safari, Chrome 등의 브라우저에서 사용되는 Open Source 렌더링 엔진이다. PS4 내부 브라우저에서도 WebKit을 사용한다. 그렇기에 우리는 해당 PS4의 웹킷을 attack vector로 삼았다.
 
@@ -66,7 +64,7 @@ sudo apt install cmake ruby libicu-dev gperf ninja-build
 
 또한 version에 따라 설치에 필요한 것들이 다를 수 있으니 그때마다 설치해 주어야 한다.
 
-#### 2. JSC 빌드
+#### 2.2 JSC 빌드
 JSC 빌드 명령어는 다음과 같다. 
 ```bash
 ./webkit/Tools/Scripts/build-webkit --jsc-only --debug
