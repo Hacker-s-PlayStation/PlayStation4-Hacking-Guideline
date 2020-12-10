@@ -290,7 +290,7 @@ export CXX=/usr/bin/clang++
 ❯ code CMakeLists.txt
 ```
 오류가 나는 부분이 로그에 남을텐데 해당 라인 넘버로 이동한 후 그 위에 4줄의 코드를 추가해 주면 된다.
-```bash
+```javascript
 set(THREADS_PREFER_PTHREAD_FLAG ON) // Where the error occurred
 ```
 ```javascript
