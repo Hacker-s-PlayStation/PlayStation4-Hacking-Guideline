@@ -72,8 +72,8 @@ JSC 빌드 명령어는 다음과 같다.
 ./webkit/Tools/Scripts/build-webkit --jsc-only --debug
 ```
 
-`jsc-only` : jsc만 빌드함
-`debug` : debug 모드로 빌드함 (debug 모드가 아니면 나중에 분석 할 때 `describe`라는 객체 등의 주소를 알아오는 함수를 사용할 수 없다.)
+- `jsc-only` : jsc만 빌드함
+- `debug` : debug 모드로 빌드함 (debug 모드가 아니면 나중에 분석 할 때 `describe`라는 객체 등의 주소를 알아오는 함수를 사용할 수 없다.)
 
 이후 빌드에 성공하면 다음과 같이 JSC를 실행하면 command line 이 뜨는 것을 확인 할 수 있다.
 
@@ -107,7 +107,6 @@ pip install pyyaml
  위 명령어를 실행하면 된다. ( 실행 할 때 RAM 16GB 정도 할당 권장 )
 
 - `debug` : debug 모드로 빌드함 ( debug 모드가 아니면 나중에 분석 할 때 describe라는 객체 등의 주소를 알어오는 함수를 못 사용함 )
-
 - `gtk` : gtk 모드로 빌드함
 
 빌드가 되고 난 뒤 다음 명령어를 치면 
