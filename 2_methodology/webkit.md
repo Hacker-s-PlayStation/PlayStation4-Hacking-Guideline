@@ -196,16 +196,17 @@ public length, vector length, m_numValuesInVector
 - vector length : 실제로 할당된 공간의 길이
 - m_numValuesInVector : 실제로 할당된 element의 개수
 
-해당 PoC에서`m_numValuesInVector` 값이 underflow로 인해 매우 큰 값으로 변경된다. 그리고 이후에 `length` 속성을 변경해줌으로써 `public length`와 `m_numValuesInVector`가 같은 값을 갖도록 한다. 이런 경우 `unshiftCountWithArrayStorage` 함수에서 아래 조건문을 우회하고 마치 배열에 hole이 없는 것처럼 `unshift` 작업을 진행할 수 있다. 이 과정에서 OOB access가 발생한다.
+해당 PoC에서`m_numValuesInVector` 값이 underflow로 인해 매우 큰 값으로 변경된다. 그리고 이후에 `length` 속성을 변경해줌으로써 `public length`와 `m_numValuesInVector`가 같은 값을 갖도록 한다.
 ```c++
 if (storage->hasHoles() || storage->inSparseMode() || shouldUseSlowPut(indexingType()))
         return false;
 ```
-해당 취약점을 이용한 exploit 기법은 [공개된 코드](https://github.com/Cryptogenic/PS4-6.20-WebKit-Code-Execution-Exploit)를 참고하여 분석했다.
+이런 경우 `unshiftCountWithArrayStorage` 함수 내부에서 위 조건문을 우회하고 마치 배열에 hole이 없는 것처럼 `unshift` 작업을 진행할 수 있다. 이 과정에서 OOB access가 발생한다.
 
 ![image](https://user-images.githubusercontent.com/45416961/101714810-a8da6300-3add-11eb-8012-77c5c4b83fbe.png)
 
-아무래도 케이스 스터디이다보니 해당 사례에 대해 자세히 설명할 필요는 없을 것 같다.
+해당 취약점을 이용한 exploit 기법은 [공개된 코드](https://github.com/Cryptogenic/PS4-6.20-WebKit-Code-Execution-Exploit)를 참고하여 분석했다. 코드를 PC에 포팅하는 과정에서 재현이 잘 되지 않는 부분이 있어서 취약점 트리거 로직을 리팩토링 하기도 했다. 아무래도 케이스 스터디이다보니 해당 내용에 대해 자세히 설명할 필요는 없을 것 같다.
+
 
 ## 4. Sanitizer
 ### 4.1. 개요
