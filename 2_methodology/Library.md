@@ -1,30 +1,49 @@
-# Library
-## 개요
-### Uart Log
+### Page Contents <!-- omit in toc -->
+- [1. 개요](#1-개요)
+  - [1.1. Uart Log](#11-uart-log)
+  - [1.2. 파일 복호화](#12-파일-복호화)
+- [2. 소스코드 오디팅 준비](#2-소스코드-오디팅-준비)
+  - [2.1. 라이브러리 함수 심볼 복구](#21-라이브러리-함수-심볼-복구)
+- [3. 퍼징 준비](#3-퍼징-준비)
+  - [3.1. ps4 라이브러리](#31-ps4-라이브러리)
+  - [3.2. sprx를 so파일로 바꾸기](#32-sprx를-so파일로-바꾸기)
+  - [3.3. env파일 암복호화](#33-env파일-암복호화)
+  - [3.4. SPRX / ELF HEADER](#34-sprx--elf-header)
+  - [3.5. CRAFT PROGRAM HEADER](#35-craft-program-header)
+  - [3.6. CRAFT DYNAMIC ENTRIES](#36-craft-dynamic-entries)
+  - [3.7. Creating DT_STRTAB](#37-creating-dt_strtab)
+    - [3.7.1. Creating DT_SYM](#371-creating-dt_sym)
+  - [3.8. Creating relocation table](#38-creating-relocation-table)
+  - [3.9. CREATING SECTION HEADER](#39-creating-section-header)
+
+---
+# Library <!-- omit in toc -->
+## 1. 개요
+### 1.1. Uart Log
 Uart Log를 보다가 PS4에서 외부 서버에서 주기적으로 파일을 가져오는 것을 확인했다<br>
 ![image](https://user-images.githubusercontent.com/39231485/101589311-86880d00-3a2b-11eb-9906-aafc7b2b666e.png)
 ```
 SERVER_URL={http://ps4-system.sec.np.dl.playstation.net/ps4-system/hid_config/np/v00/hidusbpower.env}
 ```
 서버에서 전달받는 파일은 env파일이다. env파일은 PS4 서버와 기기사이에서 데이터를 주고받는 포맷으로 이에 대한 자세한 정보는 [여기](https://www.psdevwiki.com/ps4/Envelope_Files)에서 확인 가능하다. UART Log에서 출력된 해당 env파일의 처리루틴을 살펴본 결과, env파일의 복호화를 통해 xml파일이 생성되었고, 이를 libxml2 라이브러리에서 처리한다. **따라서 서버로부터 받아오는 env파일을 통신 중간에 임의로 변조하여 공격하는 새로운 시나리오를 생각해냈다. 그리고 이를 확장하여 기존에 WebKit, Freebsd 취약점을 사용하는 Jailbreak와는 다르게 프로세스 안에 있는 라이브러리의 취약점을 사용하는 것을 생각해봤다. 라이브러리 내의 취약점을 찾기 위해서 소스 코드 오디팅, 라이브러리 함수를 대상으로 퍼징을 시도한다.**
-### 파일 복호화
+### 1.2. 파일 복호화
 PS4 안의 파일들은 모두 암호화가 되어있기 때문에 복호화를 진행해야 한다. 복호화된 내용물을 모아둔 [사이트](https://darthsternie.net/ps4-decrypted-firmwares/)가 존재하여 이를 이용했다. 아쉽게도 2020년 12월 기준, 가장 최신 버전은 8.01이지만, 위 사이트에는 7.00버전까지 존재했고, 7.00버전을 분석했다.<br>
 
-## 소스코드 오디팅 준비
-### 라이브러리 함수 심볼 복구
+## 2. 소스코드 오디팅 준비
+### 2.1. 라이브러리 함수 심볼 복구
 복호화된 sprx를 아이다로 열었을 때, 심볼은 존재하지 않는다.<br>
 ![image](https://user-images.githubusercontent.com/39231485/101623622-0f1ea180-3a5c-11eb-8f63-9687c8a3624d.png)
 
 하지만 심볼 대신 NID라는 것을 통하여 함수 주소와 매치시키는데, 만약 특정 NID가 어떤 함수명인지 안다면 심볼을 복구 할 수 있을 것이다.<br>
 NID와 함수명을 매치한 약 38000개의 데이터를 모아놓고, 이를 매칭시켜주는 아이다 플러그인을 만든 [사이트](https://github.com/SocraticBliss/ps4_module_loader)가 존재한다. 해당 플러그인을 사용하면 많은 함수들의 심볼들을 구할 수 있다.<br>![image](https://user-images.githubusercontent.com/39231485/101710935-d9b69a00-3ad5-11eb-9326-ff45cc95335b.png)<br>
 
-## 퍼징 준비
-### ps4 라이브러리
+## 3. 퍼징 준비
+### 3.1. ps4 라이브러리
 ![image](https://user-images.githubusercontent.com/39231485/101594750-8e4caf00-3a35-11eb-891e-3102d8be47be.png)
   * ps4 라이브러리는 소니가 자체적으로 만든 sprx라는 포맷을 사용한다.
-### sprx를 so파일로 바꾸기
+### 3.2. sprx를 so파일로 바꾸기
 퍼징을 진행할 때, MITM기법으로 env파일을 변조하여 기기에 전달하는 방식은 속도가 매우 느리고, 콘솔 기기내의 code coverage를 분석하는데도 어려움이 있다. 따라서 xml 처리 루틴을 PC에서 재현한 후에 이를 이용하여 PC상에서 퍼징을 하려고 한다. sprx는 PS4 전용 포맷이기 때문에 이를 PC에서 사용할 수 있도록 하기 위해 elf 포맷으로 변경하는 것을 시도했다.
-### env파일 암복호화
+### 3.3. env파일 암복호화
 변조된 xml데이터를 전달하기 위해서는, env파일 암복호화를 임의로 할 수 있도록 해야한다. [여기](https://github.com/SocraticBliss/ps4_env_decryptor)에서 env파일 복호화 코드를 구할 수 있다. 우리는 이를 참고하여 아래와같이 env파일 암호화 코드를 구현했다.
 ```python
 from binascii import unhexlify as uhx, hexlify as hx
@@ -166,7 +185,7 @@ def main(argc, argv):
 if __name__ == '__main__':
     main(len(sys.argv), sys.argv)
 ```
-### SPRX / ELF HEADER
+### 3.4. SPRX / ELF HEADER
 
 - 두 포맷의 헤더 필드는 거의 동일하다. 각각의 요소만 조금씩 변형시켜주면 된다.
 
@@ -236,7 +255,7 @@ ELF Header:
 - `Number of section headers`
     - 섹션 헤더들의 갯수. 추가한 만큼 나중에 늘려주면 된다.
 
-### CRAFT PROGRAM HEADER
+### 3.5. CRAFT PROGRAM HEADER
 
 - elf(.so)의 프로그램 헤더(참고용)
     - GNU_ 가 붙은 타입들은 필수적이지 않은 요소들이라 일단 배제하고 보아도 된다.
@@ -331,7 +350,7 @@ LOAD           0x0000000000000000 0x0000000000000000 0x0000000000000000
 
 이제 여기서부터 기존의 elf와 다른 부분을 차근차근 고쳐나가면 되는데, 자세한 내용은 후술하면서 같이 언급할 예정이다.
 
-### CRAFT DYNAMIC ENTRIES
+### 3.6. CRAFT DYNAMIC ENTRIES
 
 ```python
 LOAD:0000000000228410                 Elf64_Dyn <5, 2000h>    ; DT_STRTAB
@@ -348,7 +367,7 @@ LOAD:00000000002284A0                 Elf64_Dyn <0>           ; DT_NULL
 
 DYNAMIC 엔트리에서 필요한 정보들을 저장할 오프셋들을 미리 지정해둔 뒤에 해당 테이블을 옮겨오거나 새로 생성할 것이다. 
 
-### Creating DT_STRTAB
+### 3.7. Creating DT_STRTAB
 
 일반적으로 ELF에서는 심볼 테이블에서 함수 이름이 위치한 string table의 인덱스를 가지고 있지만 
 
@@ -364,7 +383,7 @@ sprx에서는 함수 이름을 가진 테이블 대신에 함수 고유의 코�
 
 그리고 해당 문자열의 크기만큼 `DT_STRSZ` 을 설정해주면 된다.
 
-#### Creating DT_SYM
+#### 3.7.1. Creating DT_SYM
 
 - In sprx
 
@@ -406,7 +425,7 @@ LOAD:00000000000248C8                 Elf64_Sym <offset aZn3sce3xml11in_2 - offs
 LOAD:00000000000248C8                            offset _ZN3sce3Xml11InitializerC2Ev, 8>
 ```
 
-### Creating relocation table
+### 3.8. Creating relocation table
 
 relocation table은 그대로 copy해오면 되는데, 몇가지 유의할 점이 있다.
 
@@ -422,7 +441,7 @@ SCE_DYNLIBDATA:000000000102AAB0                             2A00000001h, 0>
 LOAD:0000000000026170                 Elf64_Rela <28068h, 8, 1C357h> ; R_X86_64_RELATIVE +1C357h
 ```
 
-### CREATING SECTION HEADER
+### 3.9. CREATING SECTION HEADER
 
 섹션 헤더를 만드는 부분은 그냥 일반적인 elf 포맷에 대한 이해도만 있으면 된다.
 
@@ -461,17 +480,20 @@ sprx에서 코드 영역은 항상 첫번째 세그먼트( 헤더가 로딩되�
        000000000001ebf0  0000000000000000  AX       0     0     16
 ```
   
-   
+---
 
-### Contents
+### Contents<!-- omit in toc -->
 [메인화면](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/README.md)<br>
-#### PS4 소개
+
+#### PS4 소개<!-- omit in toc -->
 [1. Jailbreak](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/1_introduction/Jailbreak.md)<br>
 [2. PS4 Open Source](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/1_introduction/PS4_Open_Source.md)<br>
 [3. Tools](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/1_introduction/Tools.md)<br>
-#### 프로젝트 접근 방법론
-[1. WebKit](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/2_methodology/webkit.md)<br>
-[2. Hardware](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/2_methodology/hardware.md)<br>
-[3. Library](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/2_methodology/library.md)<br>
-#### 결론
-[결론](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/3_conclusion/conclusion.md)
+
+#### 프로젝트 접근 방법론 <!-- omit in toc -->
+[1. WebKit](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/2_methodology/WebKit.md)<br>
+[2. Hardware](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/2_methodology/Hardware.md)<br>
+[3. Library](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/2_methodology/Library.md)<br>
+
+#### 결론 <!-- omit in toc -->
+[결론](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/3_conclusion/Conclusion.md)
