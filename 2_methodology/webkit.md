@@ -107,6 +107,7 @@ pip install pyyaml
  위 명령어를 실행하면 된다. ( 실행 할 때 RAM 16GB 정도 할당 권장 )
 
 - `debug` : debug 모드로 빌드함 ( debug 모드가 아니면 나중에 분석 할 때 describe라는 객체 등의 주소를 알어오는 함수를 못 사용함 )
+
 - `gtk` : gtk 모드로 빌드함
 
 빌드가 되고 난 뒤 다음 명령어를 치면 
