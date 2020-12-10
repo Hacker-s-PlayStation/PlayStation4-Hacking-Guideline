@@ -108,7 +108,7 @@ syscon dump를 하기 위해서는 우선 syscon 칩을 디솔더링 해야하�
 
 syscon glitch 하기 위해 Teensy4.0에서 동작하도록 만들어 놓은 hex 파일을 받고 `Teensy Loader`에 올린 후 Teensy4.0에 있는 버튼을 누르면 프로그래밍이 된다. 프로그래밍이 완료되면 후에 덤프가 가능해진다.
 
-[https://www.pjrc.com/teensy/loader.html](https://www.pjrc.com/teensy/loader.html) - Teensy Loader 프로그램 다운로드 사이트
+[https://www.pjrc.com/teensy/loader.html](https://www.pjrc.com/teensy/loader.html) - Teensy Loader 프로그램 다운로드 사이트<br>
 [https://github.com/VV1LD/SYSGLITCH/releases/tag/T4-1.0](https://github.com/VV1LD/SYSGLITCH/releases/tag/T4-1.0) - SYSGLITCH_TEENSY4.0.hex 다운로드 사이트
 
 ### 1.3.5. Step 4 : syscon dump
