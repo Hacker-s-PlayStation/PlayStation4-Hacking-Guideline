@@ -11,32 +11,30 @@
   - [3.1. NO JIT](#31-no-jit)
   - [3.2. NO Garbage Collector](#32-no-garbage-collector)
   - [3.3. NO WASM](#33-no-wasm)
-- [4. PS4 WebKit exploit 방법론](#4-ps4-webkit-exploit-방법론)
-  - [4.1. Return Oriented Programming, Jump Oriented Programming](#41-return-oriented-programming-jump-oriented-programming)
-- [5. Sanitizer](#5-sanitizer)
-  - [5.1. 개요](#51-개요)
-    - [5.1.1. AddressSanitizer(ASan)](#511-addresssanitizerasan)
-    - [5.1.2. MemorySanitizer(MSan)](#512-memorysanitizermsan)
-    - [5.1.3. UndefinedBehaviorSanitizer(UBSan)](#513-undefinedbehaviorsanitizerubsan)
-  - [5.2. 빌드](#52-빌드)
-    - [5.2.1. Step 1 : 컴파일 플래그 설정](#521-step-1--컴파일-플래그-설정)
-    - [5.2.2. Step 2 : 빌드 환경설정](#522-step-2--빌드-환경설정)
-    - [5.2.3. Step 3 : clang 빌드](#523-step-3--clang-빌드)
-    - [5.2.4. Step 4 : 트러블슈팅](#524-step-4--트러블슈팅)
-    - [5.2.5. Step 5 : 테스트](#525-step-5--테스트)
-  - [5.3. 문제점](#53-문제점)
-- [6. 1-day 취약점 분석 방법론](#6-1-day-취약점-분석-방법론)
-  - [6.1. Chromium](#61-chromium)
-  - [6.2. exploit-db](#62-exploit-db)
-  - [6.3. Bugzilla](#63-bugzilla)
-  - [6.4. WebKit regression test](#64-webkit-regression-test)
-- [7. Reference](#7-reference)
+  - [3.4. Return Oriented Programming, Jump Oriented Programming](#34-return-oriented-programming-jump-oriented-programming)
+    - [3.4.1. FW 6.20 WebKit exploit](#341-fw-620-webkit-exploit)
+- [4. Sanitizer](#4-sanitizer)
+  - [4.1. 개요](#41-개요)
+    - [4.1.1. AddressSanitizer(ASan)](#411-addresssanitizerasan)
+    - [4.1.2. MemorySanitizer(MSan)](#412-memorysanitizermsan)
+    - [4.1.3. UndefinedBehaviorSanitizer(UBSan)](#413-undefinedbehaviorsanitizerubsan)
+  - [4.2. 빌드](#42-빌드)
+    - [4.2.1. Step 1 : 컴파일 플래그 설정](#421-step-1--컴파일-플래그-설정)
+    - [4.2.2. Step 2 : 빌드 환경설정](#422-step-2--빌드-환경설정)
+    - [4.2.3. Step 3 : clang 빌드](#423-step-3--clang-빌드)
+    - [4.2.4. Step 4 : 트러블슈팅](#424-step-4--트러블슈팅)
+    - [4.2.5. Step 5 : 테스트](#425-step-5--테스트)
+  - [4.3. 문제점](#43-문제점)
+- [5. 1-day 취약점 분석 방법론](#5-1-day-취약점-분석-방법론)
+  - [5.1. Chromium](#51-chromium)
+  - [5.2. exploit-db](#52-exploit-db)
+  - [5.3. Bugzilla](#53-bugzilla)
+  - [5.4. WebKit regression test](#54-webkit-regression-test)
+- [6. Reference](#6-reference)
 
 ---
 
-
 ## 1. 개요
-
 ### 1.1. WebKit 이란?
 
 APPLE 에서 개발한 Safari, Chrome 등의 브라우저에서 사용되는 Open Source 렌더링 엔진이다. PS4 내부 브라우저에서도 WebKit을 사용한다. 그렇기에 우리는 해당 PS4의 웹킷을 attack vector로 삼았다.
@@ -112,11 +110,9 @@ pip install pyyaml
 
 위와 같이 minibrowser가 실행됨을 알 수 있다. 만약 index.html을 미니 브라우저에서 실행시키고 싶으면 아래와 같이 뒤에 index.html을 붙이면 된다.
 
-
 ```bash
 ./webkit/Tools/Scripts/run-minibrowser --gtk index.html
 ``` 
-
 
 ### 2.4. PS4 Webkit 빌드
 서론에서 [언급](#webkit)했던 PS4 WebKit을 다운 받은 뒤 열어 보면 다음과 같이 `WebKit-601.2.7-800`과 `WebKit-606.4.6-800` 두 개의 폴더가 있음을 확인 할 수 있다. (8.00 기준)
@@ -170,26 +166,62 @@ JIT과 마찬가지로 Browser exploit에서 활용되는 Garbage Collector도 `
 
 PS4에서 오류가 발생하여 `"ReferenceError: Can't find variable: WebAssembly"`이 출력 되는 것을 확인 할 수 있었다. 확실히 WebAssembly는 없다.
 
-## 4. PS4 WebKit exploit 방법론
-### 4.1. Return Oriented Programming, Jump Oriented Programming
+### 3.4. Return Oriented Programming, Jump Oriented Programming
+> 요약하자면 PS4 WebKit에는 JIT, GC, WebAssembly가 존재하지 않는다.
 
-(작성 중)
+그렇기에 ROP, JOP 기법을 사용해서 exploit을 해야 한다. 우리는 이전 Jailbreak 사례들 중에서 이러한 기법이 사용된 케이스들을 분석하였다. 그 중 6.20 Jailbreak 사례에 대해서 간략히 언급하고 넘어가도록 하겠다.
 
-## 5. Sanitizer
-### 5.1. 개요
+- ROP(Return Oriented Programming) : ROP는 RET 명령어를 이용하여 프로그램의 흐름을 제어하는 Exploit 기술 이다. 공격자가 실행 공간 보호(NXbit) 및 코드 서명(Code signing)과 같은 보안 방어가 있는 상태에서 코드를 실행할 수 있게 해준다.<sup id="head1">[1](#foot1)</sup>
+- JOP(Jump Oriented Programming) : JOP는 JMP 명령어를 이용하여 프로그램의 흐름을 제어하는 Exploit 기술 이다.<sup id="head2">[2](#foot2)</sup>
+
+#### 3.4.1. FW 6.20 WebKit exploit
+6.20 버전의 WebKit exploit에 CVE-2018-4441 취약점이 이용되었다. PoC는 아래와 같다.
+```javascript
+function main() {
+    let arr = [1];
+
+    arr.length = 0x100000;
+    arr.splice(0, 0x11);
+
+    arr.length = 0xfffffff0;
+    arr.splice(0xfffffff0, 0, 1);
+}
+
+main();
+```
+```
+public length, vector length, m_numValuesInVector
+````
+- public length : array.length를 했을 때 출력되는 길이
+- vector length : 실제로 할당된 공간의 길이
+- m_numValuesInVector : 실제로 할당된 element의 개수
+
+해당 PoC에서`m_numValuesInVector` 값이 underflow로 인해 매우 큰 값으로 변경된다. 그리고 이후에 `length` 속성을 변경해줌으로써 `public length`와 `m_numValuesInVector`가 같은 값을 갖도록 한다. 이런 경우 `unshiftCountWithArrayStorage` 함수에서 아래 조건문을 우회하고 마치 배열에 hole이 없는 것처럼 `unshift` 작업을 진행할 수 있다. 이 과정에서 OOB access가 발생한다.
+```c++
+if (storage->hasHoles() || storage->inSparseMode() || shouldUseSlowPut(indexingType()))
+        return false;
+```
+해당 취약점을 이용한 exploit 기법은 [공개된 코드](https://github.com/Cryptogenic/PS4-6.20-WebKit-Code-Execution-Exploit)를 참고하여 분석했다.
+
+![image](https://user-images.githubusercontent.com/45416961/101714810-a8da6300-3add-11eb-8012-77c5c4b83fbe.png)
+
+아무래도 케이스 스터디이다보니 해당 사례에 대해 자세히 설명할 필요는 없을 것 같다.
+
+## 4. Sanitizer
+### 4.1. 개요
 Sanitizer는 버그를 감지해 주는 도구이다. 종류에 따라 탐지할 버그의 대상이 달라지며, 목적에 맞게 사용할 수 있다. 일반적으로 clang을 이용하여 컴파일을 할 때 Sanitizer 관련 플래그를 함께 입력해 주면 Sanitizer를 쉽게 붙일 수 있다.
 
-#### 5.1.1. AddressSanitizer(ASan)
-buffer-overflow 및 heap use-after-free를 포함한 메모리 액세스 버그는 C 및 C++과 같은 프로그래밍 언어의 심각한 문제로 남아 있다. AddressSanitizer는 힙, 스택 및 전역 객체에 대한 out-of-bounds 액세스와 use-after-free 버그를 탐지해 주는 도구이다.<sup id="head1">[1](#foot1)</sup>
+#### 4.1.1. AddressSanitizer(ASan)
+buffer-overflow 및 heap use-after-free를 포함한 메모리 액세스 버그는 C 및 C++과 같은 프로그래밍 언어의 심각한 문제로 남아 있다. AddressSanitizer는 힙, 스택 및 전역 객체에 대한 out-of-bounds 액세스와 use-after-free 버그를 탐지해 주는 도구이다.<sup id="head3">[3](#foot3)</sup>
 
-#### 5.1.2. MemorySanitizer(MSan)
-MemorySanitizer는 초기화 되지 않은 변수를 읽는 경우를 탐지해 주는 도구이다.<sup id="head2">[2](#foot2)</sup>
+#### 4.1.2. MemorySanitizer(MSan)
+MemorySanitizer는 초기화 되지 않은 변수를 읽는 경우를 탐지해 주는 도구이다.<sup id="head4">[4](#foot4)</sup>
 
-#### 5.1.3. UndefinedBehaviorSanitizer(UBSan)
-UndefinedBehaviorSanitizer는 undefined behavior를 탐지하는 빠른 도구이다. 컴파일 타임에 프로그램을 수정하며 프로그램 실행 중 정의되지 않은 다양한 행위들을 포착한다.<sup id="head3">[3](#foot3)</sup>
+#### 4.1.3. UndefinedBehaviorSanitizer(UBSan)
+UndefinedBehaviorSanitizer는 undefined behavior를 탐지하는 빠른 도구이다. 컴파일 타임에 프로그램을 수정하며 프로그램 실행 중 정의되지 않은 다양한 행위들을 포착한다.<sup id="head5">[5](#foot5)</sup>
 
-### 5.2. 빌드
-WebKit 같은 경우는 빌드를 할 때 perl 기반의 스크립트를 이용하게 된다. 또한 스크립트 중에서 빌드 환경설정을 해주는 스크립트가 존재하는데, 여기에서 Sanitizer 옵션을 줄 수 있다. (아래 명령어 참고<sup id="head4">[4](#foot4)</sup>)
+### 4.2. 빌드
+WebKit 같은 경우는 빌드를 할 때 perl 기반의 스크립트를 이용하게 된다. 또한 스크립트 중에서 빌드 환경설정을 해주는 스크립트가 존재하는데, 여기에서 Sanitizer 옵션을 줄 수 있다. (아래 명령어 참고<sup id="head6">[6](#foot6)</sup>)
 ```bash
 ./Tools/Scripts/set-webkit-configuration --release --asan
 ./Tools/Scripts/build-webkit
@@ -202,7 +234,7 @@ WebKit 같은 경우는 빌드를 할 때 perl 기반의 스크립트를 이용�
 
 > **Environment** : Ubuntu 18.04 64bit
 
-#### 5.2.1. Step 1 : 컴파일 플래그 설정
+#### 4.2.1. Step 1 : 컴파일 플래그 설정
 컴파일 플래그를 설정할 수 있는 파일은 `/webkit/Source/cmake/WebKitCompilerFlags.cmake`이다. 이 파일의 내용을 수정하여 우리가 원하는 Sanitizer를 붙일 수 있다. 참고로 최신 버전의 `WebKitCompilerFlags.cmake` 에는 address, undefined, thread, memory, leak과 같은 flag를 적용할 수 있게끔 분기 로직이 존재한다. (아래 코드 참고)
 ```javascript
 foreach (SANITIZER ${ENABLE_SANITIZERS})
@@ -259,13 +291,13 @@ WEBKIT_PREPEND_GLOBAL_COMPILER_FLAGS(-fno-omit-frame-pointer -fno-optimize-sibli
   - Option : `-fno-omit-frame-pointer -fsanitize-memory-track-origins`
 - UndefinedBehaviorSanitizer(UBSan) : `-fsanitize=undefined`
 
-#### 5.2.2. Step 2 : 빌드 환경설정
+#### 4.2.2. Step 2 : 빌드 환경설정
 ```bash
 ./Tools/Scripts/set-webkit-configuration --release --asan
 ```
 모든 옵션을 변경했다면 Asan 빌드를 활성화 해야 한다. release/debug는 자유롭게 선택하면 된다. 해당 작업을 해줘야 Sanitizer를 붙여서 빌드가 되고, 그 과정에서 원래는 Asan이 적용되어야 했던 부분이 우리가 원하는 Sanitizer로 변경될 것이다.
 
-#### 5.2.3. Step 3 : clang 빌드
+#### 4.2.3. Step 3 : clang 빌드
 만약 우분투에서 해당 작업을 수행한다면 디폴트로 gcc 컴파일러를 통해 빌드가 될 것이다. 아쉽게도 gcc에서 `-fsanitize=MemorySanitizer`로 빌드시 에러가 발생한다. 이러한 옵션은 clang 컴파일러를 이용해야 하는데 환경변수로 기본 컴파일러를 지정해 주면 간단히 해결되는 문제이다.
 ```bash
 export CC=/usr/bin/clang
@@ -292,7 +324,7 @@ export CXX=/usr/bin/clang++
 > - CXX compiler : /usr/bin/c++
 > - ENABLE_ADDRESS_SANITIZER:BOOL=OFF
 
-#### 5.2.4. Step 4 : 트러블슈팅
+#### 4.2.4. Step 4 : 트러블슈팅
 아마도 빌드는 한 번에 되지 않을 것이다. `Could NOT find Threads (missing: Threads_FOUND)` 이런 메시지가 뜨면서 빌드에 실패할 수 있다. 이 경우 가장 최상위 디렉토리에 존재하는 `CMakeLists.txt` 파일을 수정해 주면 된다.
 ```bash
 ❯ pwd
@@ -313,7 +345,7 @@ set(CMAKE_USE_PTHREADS_INIT 1)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 ```
-#### 5.2.5. Step 5 : 테스트
+#### 4.2.5. Step 5 : 테스트
 마지막으로 PoC를 테스트해보거나 `testmasm` 바이너리를 한 번 실행해 보자.
 ```bash
 # Built with --jsc-only
@@ -324,27 +356,27 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 ![msan](https://user-images.githubusercontent.com/45416961/101595740-3adb6080-3a37-11eb-815c-8a8727ee3ee4.png)
 위와 같이 메시지가 뜨면 빌드에 성공한 것이다. 만약 위 사진처럼 출력되지 않는다면 `CMakeCache.txt` 파일을 보면서 컴파일러나 Asan enable 설정이 잘 되었는지 점검해 보자.
 
-### 5.3. 문제점
+### 4.3. 문제점
 > Asan 이외의 Sanitizer는 이용할 수 없을 정도로 매우 불안정하다.
 
 ![image](https://user-images.githubusercontent.com/45416961/101624586-7a1ca800-3a5d-11eb-8193-689541296010.png)
 아마 옛날 버전의 WebKit을 사용해서 그런 것일지도 모르겠다.*(본 프로젝트에서는 WebKit 최신 버전을 이용할 일이 없어서 빌드를 해보지 않았다.)* 2018-12-16 버전으로 Msan이나 UBSan을 붙여서 테스트를 해봤더니 오탐률이 거의 100%에 육박했다. 소위 말해 '개복치' 스럽다고도 할 수 있겠다. jsc에서 `print("hello world")`만 해줘도 Memory Leak이 발생하니 그 결과가 가히 실망스럽다. 
 
-## 6. 1-day 취약점 분석 방법론
+## 5. 1-day 취약점 분석 방법론
 다음으로는 본 프로젝트에서 1-day 취약점을 분석하기 위해 수립 및 시행한 방법론을 소개하고자 한다.
-### 6.1. Chromium
+### 5.1. Chromium
 ![image](https://user-images.githubusercontent.com/45416961/101621717-771fb880-3a59-11eb-9eca-bce3ecbad852.png)
 ![image](https://user-images.githubusercontent.com/45416961/101621198-c9aca500-3a58-11eb-9b20-12056b95fa12.png)
 가장 먼저 [Chromium](https://bugs.chromium.org/p/project-zero/issues/list?sort=-reported&q=webkit&can=1)에서 Project-zero 팀이 report 한 취약점들을 분석하고, PS4에 포팅하고, 코드 오디팅을 수행했다. 거의 모든 취약점들을 테스트해보았지만 이미 패치가 되었거나, PoC에 사용되는 모듈이 PS4에는 존재하지 않는 경우가 대부분이었다. 특히 JSC 취약점은 대개 JIT 컴파일러를 기반으로 하기 때문에 별다른 수확은 없었다.
 
-### 6.2. exploit-db
+### 5.2. exploit-db
 ![image](https://user-images.githubusercontent.com/45416961/101621658-6707d900-3a59-11eb-8f9a-000d03573bc7.png)
 [exploit-db](https://www.exploit-db.com/) 또한 Chromium과 함께 초반에 취약점을 찾고자 부단히 방문했던 사이트이다. 아무래도 이미 존재하는 exploit들을 모아 놓은 사이트이기 때문에 Chromium에서 이미 봤던 코드들이 대부분이었고, 비교적 최신 exploit은 존재하지 않았다. 결론적으로 exploit-db에서도 원하는 바를 달성하지는 못했다.
 
-### 6.3. Bugzilla
+### 5.3. Bugzilla
 ![image](https://user-images.githubusercontent.com/45416961/101606281-89dcc200-3a46-11eb-9fa9-0e962243c136.png)
 [WebKit Bugzilla](https://bugs.webkit.org/)에 report 되는 버그들을 모니터링 하면서 실제로 exploit에 사용될만한 취약점이 있는지 탐색할 수 있다. 다만 간단한 description과 패치 내역만 보고 특정 버그가 exploitable한지 판단할 수 있는 경험치가 요구된다. 그리고 Security issue의 경우 일반 사용자들에게 액세스 권한을 주지 않는 경우가 많다. 따라서 Bugzilla만 살펴보면서 취약성이 존재하는 케이스를 찾아내기란 모래알 속 진주 찾기와도 같다. 물론 시작하는 단계에서는 말이다.
-### 6.4. WebKit regression test
+### 5.4. WebKit regression test
 > 아직 경험치가 많이 부족하다면 ChangeLog가 버그 탐색을 위한 좋은 입문 경로가 될 수 있다.
 
 WebKit repositorty를 조금만 들여다 보면 ChangeLog 상에 패치 내역이 아주 잘 정리되어 있다는 사실을 알 수 있다. `JSTests, LayoutTests` 디렉토리는 JavaScriptCore와 WebCore 각각에 대한 테스트 코드를 담고 있는데, 물론 이 폴더 내부에도 ChangeLog가 존재한다. ChangeLog의 패턴을 살펴보고 넘어가자.
@@ -370,11 +402,14 @@ WebKit repositorty를 조금만 들여다 보면 ChangeLog 상에 패치 내역�
 
 그러던 도중 WebCore 엔진에서 pc 레지스터 컨트롤이 가능한 취약점 하나를 발견할 수 있었다. 6.72 버전에서 디버깅을 통해 레지스터 값이 임의의 값으로 변경되는 것을 확인했고, 8.01 버전에서도 레지스터 값을 확인할 순 없었지만 에러 반응이 나타나는 것을 볼 수 있었다. 다만 해당 취약점 하나만으로는 exploit을 할 수 없기에 info leak 취약점을 탐색해야만 했다. 프로젝트 기간 동안 쓸만한 info leak 취약점은 발견하지 못했다. 비록 프로젝트는 끝났지만 Future work로 시도해보면 좋을 것 같다.
 
-## 7. Reference
-><b id="foot1">[[1](#head1)]</b> Konstantin Serebryany; Derek Bruening; Alexander Potapenko; Dmitry Vyukov. ["AddressSanitizer: a fast address sanity checker"(PDF)](https://www.usenix.org/system/files/conference/atc12/atc12-final39.pdf). Proceedings of the 2012 USENIX conference on Annual Technical Conference.<br>
-><b id="foot2">[[2](#head2)]</b> [MemorySanitizer - Clang 12 Documentation](https://clang.llvm.org/docs/MemorySanitizer.html)<br>
-><b id="foot3">[[3](#head3)]</b> [UndefinedBehaviorSanitizer - Clang 12 Documentation](https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html)<br>
-><b id="foot4">[[4](#head4)]</b> [Building WebKit with Clang Address Sanitizer(ASan)](https://trac.webkit.org/wiki/ASanWebKit)<br>
+## 6. Reference
+><b id="foot1">[[1](#head1)]</b> [ROP(Return-Oriented Programming)](https://en.wikipedia.org/wiki/Return-oriented_programming#cite_note-2)<br>
+><b id="foot2">[[2](#head2)]</b> [JOP(Jump-Oriented Programming)](https://www.lazenca.net/pages/viewpage.action?pageId=16810290)<br>
+><b id="foot3">[[3](#head3)]</b> Konstantin Serebryany; Derek Bruening; Alexander Potapenko; Dmitry Vyukov. ["AddressSanitizer: a fast address sanity checker"(PDF)](https://www.usenix.org/system/files/conference/atc12/atc12-final39.pdf). Proceedings of the 2012 USENIX conference on Annual Technical Conference.<br>
+><b id="foot4">[[4](#head4)]</b> [MemorySanitizer - Clang 12 Documentation](https://clang.llvm.org/docs/MemorySanitizer.html)<br>
+><b id="foot5">[[5](#head5)]</b> [UndefinedBehaviorSanitizer - Clang 12 Documentation](https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html)<br>
+><b id="foot6">[[6](#head6)]</b> [Building WebKit with Clang Address Sanitizer(ASan)](https://trac.webkit.org/wiki/ASanWebKit)<br>
+
 
 ---
 
