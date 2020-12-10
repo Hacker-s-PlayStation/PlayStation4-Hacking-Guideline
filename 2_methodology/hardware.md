@@ -71,7 +71,7 @@ USB to TTL Serial Cable에 Step 2에서 납땜한 JumperWire를 연결해준다.
 소니에서 UART Log를 확인하지 못하도록 공백으로만 출력하도록 해놨다.
 
 ### 1.2.6. 결과
-UART Log를 보고 싶으면 Jailbreak 해놓은 PS4에서 ps4debug.bin 파일을 bin loader로 올리면 확인할 수 있다. 하지만 이는 하드웨어적으로 연결 안해도 nc를 이용하여 포트 접속만 해도 확인할 수 있으니 하드웨어적인 성과는 없었다.
+UART Log를 보고 싶으면 Jailbreak 해놓은 PS4에서 ps4debug.bin 파일을 bin loader로 올리거나 mira 기능을 이용해 jailbreak를 하면 UART Log가 활성화된 것을 확인할 수 있다. 하지만 이는 하드웨어적으로 연결 안해도 nc를 이용하여 포트 접속만 해도 확인할 수 있으니 하드웨어적인 성과는 없었다. 하드웨어적인 연결로 UART Log를 확인하는 것이 아닌 nc를 사용해 PS4에서 UART Log 활성화된 포트로 접속하는 방법은 Jailbreak 목차에서 확인하면 될 것 같다.
 
 
 ## 1.3. syscon dump
