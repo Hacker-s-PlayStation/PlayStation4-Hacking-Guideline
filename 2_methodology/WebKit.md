@@ -431,10 +431,13 @@ PS4 브라우저에서 사용하는 property 중에서 Safari에서 사용하지
     }
 </script>
 ```
-PS4에서 사용하는 window property들을 Set 버튼을 누른 후 Submit을 누르면 서버로 property들이 전송이 되는 소스코드 이다.
+
+![image](https://user-images.githubusercontent.com/45416961/101769433-4b203800-3b2a-11eb-979e-a71af77875dc.png)
+
+Set 버튼을 누른 후 Submit을 누르면, PS4에서 사용하는 window property들을 서버로 전송해 주는 소스코드이다.
 
 ```
-172.30.1.35 - - [10/Dec/2020 13:38:26] "GET /?test=undefineda+document+object+window+self+name+location+history+locationbar+menubar+personalbar+scrollbars+statusbar+
+"GET /?test=undefineda+document+object+window+self+name+location+history+locationbar+menubar+personalbar+scrollbars+statusbar+
 toolbar+status+closed+frames+length+top+opener+parent+frameElement+navigator+applicationCache+sessionStorage+localStorage
 +screen+innerHeight+innerWidth+scrollX+pageXOffset+scrollY+pageYOffset+screenX+screenY+outerWidth+outerHeight+devicePixelRatio
 +event+defaultStatus+defaultstatus+offscreenBuffering+screenLeft+screenTop+clientInformation+styleMedia+onabort+onblur+
@@ -451,10 +454,10 @@ moveTo+moveBy+resizeTo+resizeBy+scroll+scrollTo+scrollBy+getSelection+find+webki
 webkitCancelRequestAnimationFrame+getMatchedCSSRules+showModalDialog+webkitConvertPointFromPageToNode+webkitConvertPointFromNodeToPage+
 openDatabase+setTimeout+clearTimeout+setInterval+clearInterval+atob+btoa+customElements+visualViewport+isSecureContext+fetch+ HTTP/1.1" 200 -
 ```
-위 로그는 PS4에서 전송된 PS4가 사용하는 window property인데 Safari에서 사용하는 window property와 비교해서 PS4에서만 사용하는 property가 존재하는지 확인해봤는데 `openDatabase` property는 Safari에서는 지원하지 않는 property였다.
+위 로그는 서버로 전송된 PS4가 사용하는 window property 정보인데, 이를 Safari에서 사용하는 window property와 비교해서 PS4에서만 사용하는 것이 존재하는지 확인해보았다. 그 중 `openDatabase`가 Safari에서는 지원하지 않는 property라는 사실을 알게 되었다.
 
 ### 6.2. openDatabase
-openDatabase는 Web SQL Database를 사용하여 Database를 만들어주는 property입니다. Safari에서는 race condition 문제가 자주 발생해서 더이상 지원하지 않는다고 한다. https://caniuse.com/sql-storage 이 링크에 들어가서 보면 Safari 13버전부터 Web SQL Database를 지원하지 않는 것이 확인된다.
+`openDatabase`는 Web SQL Database를 사용하여 Database를 만들어주는 property이다. Safari에서는 race condition 문제가 자주 발생해서 더이상 지원하지 않는다고 한다. 이 [링크](https://caniuse.com/sql-storage)에 들어가서 보면 Safari 13버전부터 Web SQL Database를 지원하지 않는 것이 확인된다.
 
 ### 6.3. Attack Vector
 Safari에서는 race condition 문제 때문에 지원하지 않기도 하고 DEFCON에서 발표된 취약점인 Magellan 같은 경우는 Chrome에서 RCE까지 가능했다. 이러한 점들을 미루어 봤을 때 상당히 해볼만한 Attack Vector라고 생각한다. (DEFCON 발표자료 참고<sup id="head7">[7](#foot7)</sup>)
