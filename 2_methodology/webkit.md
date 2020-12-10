@@ -107,7 +107,7 @@ EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
 <br>
 빌드가 되고 난 뒤 다음 명령어를 치면 
 ```
-/webkit/Tools/Scripts# ./run-minibrowser --gtk
+./webkit/Tools/Scripts/run-minibrowser --gtk
 ```
 <br>
 
