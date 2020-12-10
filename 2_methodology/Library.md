@@ -15,7 +15,9 @@
     - [3.7.1. Creating DT_SYM](#371-creating-dt_sym)
   - [3.8. Creating relocation table](#38-creating-relocation-table)
   - [3.9. CREATING SECTION HEADER](#39-creating-section-header)
-
+  - [3.10. so 파일로 변환된 라이브러리 테스트](#310-so-파일로-변환된-라이브러리-테스트)
+- [4. 스크립트](#4-스크립트)
+  - [4.1. 한계점](#41-한계점)
 ---
 # Library <!-- omit in toc -->
 ## 1. 개요
@@ -479,7 +481,41 @@ sprx에서 코드 영역은 항상 첫번째 세그먼트( 헤더가 로딩되�
   [ 5] .text             PROGBITS         0000000000004000  00004000
        000000000001ebf0  0000000000000000  AX       0     0     16
 ```
-  
+### 3.10. so 파일로 변환된 라이브러리 테스트
+```c
+#include <stdio.h>
+#include <dlfcn.h>
+
+int main(){
+
+    long long *handle;
+    double *(*func)();
+
+    handle = dlopen("./hello_output2", RTLD_LAZY);
+    func = *handle+0x98c0;
+
+    func();
+    return 0;
+}```
+위 소스코드를 사용하여 함수가 잘 실행되는지 테스트해볼 것이다.
+![image](https://user-images.githubusercontent.com/39231485/101734324-70e61680-3b03-11eb-8315-cca6132f0dfe.png)
+dlsym이 작동하지 않아서 이 함수의 오프셋을 넣고 함수 포인터를 호출시켰다.
+```
+ ► 0x7ffff7b978c0 <sceKernelGetCompiledSdkVersion+22720>    mov    rdi, qword ptr [rdi]
+   0x7ffff7b978c3 <sceKernelGetCompiledSdkVersion+22723>    test   rdi, rdi
+   0x7ffff7b978c6 <sceKernelGetCompiledSdkVersion+22726>    je     sceKernelGetCompiledSdkVersion+22733 <sceKernelGetCompiledSdkVersion+22733>
+    ↓
+   0x7ffff7b978cd <sceKernelGetCompiledSdkVersion+22733>    ret  
+```
+해당 함수가 잘 호출 된 것을 확인할 수 있다. 그러므로 만약 퍼징을 돌린다고 하였을 때, 특정 함수에 여러 값들을 넣어보며 테스트 하는 것이 가능하다.
+
+## 4. 스크립트
+```
+추후 넣을 계획
+```
+### 4.1. 한계점
+plt와 got가 연결되어있지 않기 때문에, 다른 라이브러리에서 import 하여 사용하는 함수는 실행시킬 수 없다.<br>
+dlsym이 안된다. - 이유는 추후에 작성
 ---
 
 ### Contents<!-- omit in toc -->
