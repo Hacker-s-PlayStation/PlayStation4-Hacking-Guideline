@@ -142,7 +142,7 @@ realterm 프로그램을 사용하여 덤프를 뜬다.
 
 디솔더링은 syscon과 똑같이 진행하면 된다. syscon dump를 참고하면 된다. sflash를 디솔더링 하고, Teensy 2.0 보드(이하 Teensy2.0)에 연결해줬다. 연결할 때는 Wildcard가 제공해준 daigram과 위 사진을 보면서 연결하였다.
 
-처음에 Teensy2.0을 연결하면 시리얼 포트로 인식이 되지 않을 것이다. Teensy를 COM 포트로 인식되게끔 하려면 아두이노 프로그램으로 한 번 쯤은 프로그래밍을 해 줘야 한다.
+처음에 Teensy2.0을 연결하면 시리얼 포트로 인식이 되지 않을 것이다. Teensy를 COM 포트로 인식되게끔 하려면 아두이노 프로그램으로 한 번 쯤은 프로그래밍을 해줘야 한다.
 자세한 내용은 https://www.pjrc.com/teensy/troubleshoot.html 이 사이트에 잘 나와 있다.
 
 ![com_serial](https://user-images.githubusercontent.com/48618245/101597743-79bee580-3a3a-11eb-9f5f-af34885ec829.png)
