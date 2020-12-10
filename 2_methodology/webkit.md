@@ -36,6 +36,7 @@
 
 
 ## 1. 개요
+
 ### 1.1. WebKit 이란?
 
 APPLE 에서 개발한 Safari, Chrome 등의 브라우저에서 사용되는 Open Source 렌더링 엔진이다. PS4 내부 브라우저에서도 WebKit을 사용한다. 그렇기에 우리는 해당 PS4의 웹킷을 attack vector로 삼았다.
@@ -64,19 +65,20 @@ sudo apt install cmake ruby libicu-dev gperf ninja-build
 
 또한 version에 따라 설치에 필요한 것들이 다를 수 있으니 그때마다 설치해 주어야 한다.
 
-#### 2.2 JSC 빌드
+### 2.2. JSC 빌드
+
 JSC 빌드 명령어는 다음과 같다. 
 ```bash
 ./webkit/Tools/Scripts/build-webkit --jsc-only --debug
 ```
 
-- `jsc-only` : jsc만 빌드함
-- `debug` : debug 모드로 빌드함 (debug 모드가 아니면 나중에 분석 할 때 `describe`라는 객체 등의 주소를 알아오는 함수를 사용할 수 없다.)
+- `jsc-only` : jsc만 빌드
+- `debug` : debug 모드로 빌드 (debug 모드가 아니면 나중에 분석 할 때 `describe`라는 객체 등의 주소를 알아오는 함수를 사용할 수 없다.)
 
-이후 빌드에 성공하면 다음과 같이 JSC를 실행하면 command line 이 뜨는 것을 확인 할 수 있다.
+이후 빌드에 성공하면 다음과 같이 JSC를 실행했을 때 command line이 뜨는 것을 확인 할 수 있다.
 
 ```bash
-seohojin@ubuntu:~/Desktop$ ./webkit/WebKitBuild/Debug/bin/jsc 
+$ ./webkit/WebKitBuild/Debug/bin/jsc 
 >>> 1+2
 3
 >>> 
@@ -93,19 +95,13 @@ apt install libwoff-dev flatpak flatpak-builder python-pip
 pip install pyyaml
 ```
 
-다음 명령어 실행 뒤 [xdg-dbus-proxy](https://github.com/flatpak/xdg-dbus-proxy) 와 [bwrap 0.3.1](https://launchpad.net/ubuntu/+source/bubblewrap/0.3.1-1ubuntu1) 도 설치해주어야 한다.
+다음 명령어 실행 뒤 `xdg-dbus-proxy` 와 `bwrap 0.3.1` 도 설치해주어야 한다.
+- [xdg-dbus-proxy](https://github.com/flatpak/xdg-dbus-proxy)
+- [bwrap 0.3.1](https://launchpad.net/ubuntu/+source/bubblewrap/0.3.1-1ubuntu1)
 
+위 링크들을 참고하여 설치한 뒤 `/webkit/Source/WebKit/UIProcess/gtk/WaylandCompositor.cpp` 파일에 `#include <EGL/eglmesaext.h>` 헤더를 한 줄 추가해야 한다. EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
 
-다음 링크들을 참고하여 설치한 뒤 `/webkit/Source/WebKit/UIProcess/gtk/WaylandCompositor.cpp` 파일에 `#include <EGL/eglmesaext.h>` 헤더를 한 줄 추가해야 한다. EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
-
-모든 선수 작업을 마무리 한 뒤
-```
-./webkit/Tools/Scripts/build-webkit --gtk
-```
- 위 명령어를 실행하면 된다. ( 실행 할 때 RAM 16GB 정도 할당 권장 )
-
-- `debug` : debug 모드로 빌드함 ( debug 모드가 아니면 나중에 분석 할 때 describe라는 객체 등의 주소를 알어오는 함수를 못 사용함 )
-- `gtk` : gtk 모드로 빌드함
+모든 선수 작업을 마무리 한 뒤 `/webkit/Tools/Scripts/build-webkit --gtk` 를 실행하면 된다. (실행 할 때 RAM 16GB 정도 할당 권장)
 
 빌드가 되고 난 뒤 다음 명령어를 치면 
 ```bash
@@ -114,13 +110,13 @@ pip install pyyaml
 
 <img width="800" alt="스크린샷 2020-12-10 오전 10 21 20" src="https://user-images.githubusercontent.com/47859343/101708875-8cd0c480-3ad1-11eb-929e-ab7b1fafb79f.png">
 
-다음과 같이 minibrowser가 실행됨을 알 수 있다. 만약 index.html을 미니 브라우저에서 실행시키고 싶으면
+위와 같이 minibrowser가 실행됨을 알 수 있다. 만약 index.html을 미니 브라우저에서 실행시키고 싶으면 아래와 같이 뒤에 index.html을 붙이면 된다.
+
 
 ```bash
 ./webkit/Tools/Scripts/run-minibrowser --gtk index.html
 ``` 
 
-다음과 같이 뒤에 index.html을 붙이면 된다.
 
 ### 2.4. PS4 Webkit 빌드
 서론에서 [언급](#webkit)했던 PS4 WebKit을 다운 받은 뒤 열어 보면 다음과 같이 `WebKit-601.2.7-800`과 `WebKit-606.4.6-800` 두 개의 폴더가 있음을 확인 할 수 있다. (8.00 기준)
