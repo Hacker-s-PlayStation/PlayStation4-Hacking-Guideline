@@ -63,11 +63,6 @@ JSC 빌드 명령어는 다음과 같다.
 <br>
 
 ```
-./webkit/WebKitBuild/Debug/bin/jsc
-```
-<br>
-
-```
 seohojin@ubuntu:~/Desktop$ ./webkit/WebKitBuild/Debug/bin/jsc 
 >>> 1+2
 3
