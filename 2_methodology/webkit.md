@@ -95,7 +95,11 @@ EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
 
 <br>
 
-다음과 같은 선수 작업을 마무리 한 뒤 `/webkit/Tools/Scripts/build-webkit --gtk` 를 실행하면 된다. ( 실행 할 때 RAM 16GB 정도 할당 권장 )
+다음과 같은 선수 작업을 마무리 한 뒤 
+```
+./webkit/Tools/Scripts/build-webkit --gtk
+```
+ 를 실행하면 된다. ( 실행 할 때 RAM 16GB 정도 할당 권장 )
 
 <br>
 
