@@ -17,7 +17,8 @@ Jailbreak란, 프로그램의 취약점을 이용하여 PS4의 높은 권한을 
 > PS4 펌웨어 6.72버전을 기준으로 기술이 되어있다. **본 프로젝트의 목적은 PS4의 취약점을 탐색하여 최신 펌웨어에서의 Jailbreak 가능성을 확인하고 이를 패치하여 PS4 플랫폼 위에 형성되어있는 지식재산들을 보호하는 것이 목적으로, Jailbreak를 악용하는 것이 아님을 밝힌다.** 위 목적을 달성하기 위해서 참고했던 자료 및 도구들을 본 문서에 기술한다. **본 프로젝트에서 참고한 Jailbreak 도구의 악용을 통해 발생하는 불이익에 대해서 본 프로젝트 팀원들은 책임을 지지 않을 것을 분명하게 밝힌다.**
 
 ## 2. Jailbreak를 통해 무엇을 할 수 있는가
-Jailbreak를 통해 어떤 기능들을 사용할 수 있는지 살펴보기 위해 6.72 Jailbreak를 진행했다. [유튜브 영상](https://www.youtube.com/watch?v=ycZg0fViWv4)을 참고하여 진행했다. Jailbreak 사이트에 접속하면 아래와 같이 여러가지 기능들이 있는데, 그 중 분석에 도움이 되는 몇가지를 소개하려고 한다.<br>
+Jailbreak를 통해 어떤 기능들을 사용할 수 있는지 살펴보기 위해 6.72 Jailbreak를 진행했다. [유튜브 영상](https://www.youtube.com/watch?v=ycZg0fViWv4)을 참고하여 진행했다. Jailbreak 사이트에 접속하면 아래와 같이 여러가지 기능들이 있는데, 그 중 분석에 도움이 되는 몇가지를 소개하려고 한다.
+
 ![jailbreak](https://user-images.githubusercontent.com/40509850/101586509-fec5e280-39d9-11eb-9012-09aa04601f6d.PNG "그림 1 Jailbreak 기능")
 
 ### 2.1. 임의의 binary 실행
