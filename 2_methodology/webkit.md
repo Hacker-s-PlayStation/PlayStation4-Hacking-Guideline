@@ -104,6 +104,7 @@ EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
 
 `gtk` : gtk 모드로 빌드함
 <br>
+<br>
 빌드가 되고 난 뒤 다음 명령어를 치면 
 ```
 /webkit/Tools/Scripts# ./run-minibrowser --gtk
@@ -114,9 +115,11 @@ EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
 <br>
 다음과 같이 minibrowser가 실행됨을 알 수 있다. 만약 index.html을 미니 브라우저에서 실행시키고 싶으면
 <br>
+
 ```
-/webkit/Tools/Scripts# ./run-minibrowser --gtk index.html
+./webkit/Tools/Scripts/run-minibrowser --gtk index.html
 ``` 
+
 <br>
 다음과 같이 뒤에 index.html을 붙이면 된다.
 
