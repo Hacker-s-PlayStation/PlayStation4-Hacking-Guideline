@@ -87,9 +87,9 @@ copyin: SceNKWebProcessMain has nonsleeping lock
 
 
 ---
-### 3.1. Contents <!-- omit in toc -->
+### Contents <!-- omit in toc -->
 [메인화면](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/README.md)<br>
-#### 3.1.1. PS4 소개 <!-- omit in toc -->
+#### PS4 소개 <!-- omit in toc -->
 [1. Jailbreak](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/1_introduction/Jailbreak.md)<br>
 [2. PS4 Open Source](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/1_introduction/PS4_Open_Source.md)<br>
 [3. Tools](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/1_introduction/Tools.md)<br>
