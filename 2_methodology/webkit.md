@@ -205,8 +205,7 @@ if (storage->hasHoles() || storage->inSparseMode() || shouldUseSlowPut(indexingT
 
 ![image](https://user-images.githubusercontent.com/45416961/101714810-a8da6300-3add-11eb-8012-77c5c4b83fbe.png)
 
-해당 취약점을 이용한 exploit 기법은 [공개된 코드](https://github.com/Cryptogenic/PS4-6.20-WebKit-Code-Execution-Exploit)를 참고하여 분석했다. 코드를 PC에 포팅하는 과정에서 재현이 잘 되지 않는 부분이 있어서 취약점 트리거 로직을 리팩토링 하기도 했다. 아무래도 케이스 스터디이다보니 해당 내용에 대해 자세히 설명할 필요는 없을 것 같다.
-
+본 취약점을 이용한 exploit 기법은 [공개된 코드](https://github.com/Cryptogenic/PS4-6.20-WebKit-Code-Execution-Exploit)를 참고하여 분석했다. 그리고 해당 공격 기법에 대한 경험치를 쌓기 위해 PS4를 대상으로 한 exploit 코드를 PC에서 재현하고자 포팅을 진행했다. 그 과정에서 재현이 잘 되지 않는 부분이 있어서 취약점 트리거 로직을 리팩토링 하기도 했다. 추후 실습을 진행하고자 한다면 참고하자.
 
 ## 4. Sanitizer
 ### 4.1. 개요
