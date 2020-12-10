@@ -364,7 +364,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 ### 4.3. 문제점
 > Asan 이외의 Sanitizer는 이용할 수 없을 정도로 매우 불안정하다.
 
-![image](https://user-images.githubusercontent.com/45416961/101624586-7a1ca800-3a5d-11eb-8193-689541296010.png)
+![image](https://user-images.githubusercontent.com/45416961/101727066-1cd53500-3af7-11eb-858f-12b8f7ac1b7d.png)
 아마 옛날 버전의 WebKit을 사용해서 그런 것일지도 모르겠다.*(본 프로젝트에서는 WebKit 최신 버전을 이용할 일이 없어서 빌드를 해보지 않았다.)* 2018-12-16 버전으로 Msan이나 UBSan을 붙여서 테스트를 해봤더니 오탐률이 거의 100%에 육박했다. 소위 말해 '개복치' 스럽다고도 할 수 있겠다. jsc에서 `print("hello world")`만 해줘도 Memory Leak이 발생하니 그 결과가 가히 실망스럽다. 
 
 ## 5. 1-day 취약점 분석 방법론
