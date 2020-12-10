@@ -30,7 +30,11 @@
   - [5.2. exploit-db](#52-exploit-db)
   - [5.3. Bugzilla](#53-bugzilla)
   - [5.4. WebKit regression test](#54-webkit-regression-test)
-- [6. Reference](#6-reference)
+- [6. Future Work](#6-future-work)
+  - [6.1. PS4 window property](#61-ps4-window-property)
+  - [6.2. openDatabase](#62-opendatabase)
+  - [6.3. Attack Vector](#63-attack-vector)
+- [7. Reference](#7-reference)
 
 ---
 # WebKit <!-- omit in toc -->
@@ -53,6 +57,7 @@ APPLE 에서 개발한 Safari, Chrome 등의 브라우저에서 사용되는 Ope
 해당 실습은 2018-12-16일 기준으로 checkout을 했고, 우분투 18.04로 진행 하였다.
 ```bash
 git log --before="2018-12-16"
+git checkout (해당 커밋의 hash)
 ```
 
 참고로 다음 Webkit을 빌드하기전에 다음 프로그램들이 사전에 설치되어 있어야 한다.
@@ -65,9 +70,9 @@ sudo apt install cmake ruby libicu-dev gperf ninja-build
 
 ### 2.2. JSC 빌드
 
-JSC 빌드 명령어는 다음과 같다. 
+JSC 빌드 명령어는 다음과 같다. **빌드 명령어에 나오는 모든 경로는 웹킷 루트 디렉토리를 기준으로 한다.**
 ```bash
-./webkit/Tools/Scripts/build-webkit --jsc-only --debug
+./Tools/Scripts/build-webkit --jsc-only --debug
 ```
 
 - `jsc-only` : jsc만 빌드
@@ -76,7 +81,7 @@ JSC 빌드 명령어는 다음과 같다.
 이후 빌드에 성공하면 다음과 같이 JSC를 실행했을 때 command line이 뜨는 것을 확인 할 수 있다.
 
 ```bash
-$ ./webkit/WebKitBuild/Debug/bin/jsc 
+$ ./WebKitBuild/Debug/bin/jsc 
 >>> 1+2
 3
 >>> 
@@ -86,7 +91,7 @@ $ ./webkit/WebKitBuild/Debug/bin/jsc
 GTK를 빌드하기 위해서는 먼저 다음과 같은 선수 작업이 필요하다.
 
 ```bash
-./webkit/Tools/gtk/install-dependencies
+./Tools/gtk/install-dependencies
 
 apt install libwoff-dev flatpak flatpak-builder python-pip
 
@@ -97,13 +102,13 @@ pip install pyyaml
 - [xdg-dbus-proxy](https://github.com/flatpak/xdg-dbus-proxy)
 - [bwrap 0.3.1](https://launchpad.net/ubuntu/+source/bubblewrap/0.3.1-1ubuntu1)
 
-위 링크들을 참고하여 설치한 뒤 `/webkit/Source/WebKit/UIProcess/gtk/WaylandCompositor.cpp` 파일에 `#include <EGL/eglmesaext.h>` 헤더를 한 줄 추가해야 한다. EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
+위 링크들을 참고하여 설치한 뒤 `./Source/WebKit/UIProcess/gtk/WaylandCompositor.cpp` 파일에 `#include <EGL/eglmesaext.h>` 헤더를 한 줄 추가해야 한다. EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
 
-모든 선수 작업을 마무리 한 뒤 `/webkit/Tools/Scripts/build-webkit --gtk` 를 실행하면 된다. (실행 할 때 RAM 16GB 정도 할당 권장)
+모든 선수 작업을 마무리 한 뒤 `./Tools/Scripts/build-webkit --gtk` 를 실행하면 된다. (실행 할 때 RAM 16GB 정도 할당 권장)
 
 빌드가 되고 난 뒤 다음 명령어를 치면 
 ```bash
-./webkit/Tools/Scripts/run-minibrowser --gtk
+./Tools/Scripts/run-minibrowser --gtk
 ```
 
 ![image](https://user-images.githubusercontent.com/45416961/101721228-cbbf4400-3aea-11eb-8895-957472579115.png)
@@ -111,7 +116,7 @@ pip install pyyaml
 위와 같이 minibrowser가 실행됨을 알 수 있다. 만약 index.html을 미니 브라우저에서 실행시키고 싶으면 아래와 같이 인자로 전달해 주면 된다.
 
 ```bash
-./webkit/Tools/Scripts/run-minibrowser --gtk index.html
+./Tools/Scripts/run-minibrowser --gtk index.html
 ``` 
 
 ### 2.4. PS4 Webkit 빌드
@@ -235,7 +240,7 @@ WebKit 같은 경우는 빌드를 할 때 perl 기반의 스크립트를 이용�
 > **Environment** : Ubuntu 18.04 64bit
 
 #### 4.2.1. Step 1 : 컴파일 플래그 설정
-컴파일 플래그를 설정할 수 있는 파일은 `/webkit/Source/cmake/WebKitCompilerFlags.cmake`이다. 이 파일의 내용을 수정하여 우리가 원하는 Sanitizer를 붙일 수 있다. 참고로 최신 버전의 `WebKitCompilerFlags.cmake` 에는 address, undefined, thread, memory, leak과 같은 flag를 적용할 수 있게끔 분기 로직이 존재한다. (아래 코드 참고)
+컴파일 플래그를 설정할 수 있는 파일은 `./Source/cmake/WebKitCompilerFlags.cmake`이다. 이 파일의 내용을 수정하여 우리가 원하는 Sanitizer를 붙일 수 있다. 참고로 최신 버전의 `WebKitCompilerFlags.cmake` 에는 address, undefined, thread, memory, leak과 같은 flag를 적용할 수 있게끔 분기 로직이 존재한다. (아래 코드 참고)
 ```javascript
 foreach (SANITIZER ${ENABLE_SANITIZERS})
     if (${SANITIZER} MATCHES "address")
@@ -402,13 +407,66 @@ WebKit repositorty를 조금만 들여다 보면 ChangeLog 상에 패치 내역�
 
 그러던 도중 WebCore 엔진에서 pc 레지스터 컨트롤이 가능한 취약점 하나를 발견할 수 있었다. 6.72 버전에서 디버깅을 통해 레지스터 값이 임의의 값으로 변경되는 것을 확인했고, 8.01 버전에서도 레지스터 값을 확인할 순 없었지만 에러 반응이 나타나는 것을 볼 수 있었다. 다만 해당 취약점 하나만으로는 exploit을 할 수 없기에 info leak 취약점을 탐색해야만 했다. 프로젝트 기간 동안 쓸만한 info leak 취약점은 발견하지 못했다. 비록 프로젝트는 끝났지만 Future work로 시도해보면 좋을 것 같다.
 
-## 6. Reference
+## 6. Future Work
+PS4 브라우저에서 사용하는 property 중에서 Safari에서 사용하지 않는 property가 있는지 알아봤다.
+
+### 6.1. PS4 window property
+
+```html
+<body>
+    <form action="http://172.30.1.59:8000" method="get">
+      <input type="text" id="test" name="test" value="" />
+      <input type="button" value="Set" onclick=object() />
+      <input type="submit" value="Submit" />
+    </form>
+</body>
+<script>
+    var a;
+    function object(){
+      keys = Object.keys(window);
+      for (let i = 0; i < keys.length; i++) {
+          a += keys[i] + " ";
+      }
+      document.getElementById('test').value = a;
+    }
+</script>
+```
+PS4에서 사용하는 window property들을 Set 버튼을 누른 후 Submit을 누르면 서버로 property들이 전송이 되는 소스코드 이다.
+
+```
+172.30.1.35 - - [10/Dec/2020 13:38:26] "GET /?test=undefineda+document+object+window+self+name+location+history+locationbar+menubar+personalbar+scrollbars+statusbar+
+toolbar+status+closed+frames+length+top+opener+parent+frameElement+navigator+applicationCache+sessionStorage+localStorage
++screen+innerHeight+innerWidth+scrollX+pageXOffset+scrollY+pageYOffset+screenX+screenY+outerWidth+outerHeight+devicePixelRatio
++event+defaultStatus+defaultstatus+offscreenBuffering+screenLeft+screenTop+clientInformation+styleMedia+onabort+onblur+
+oncanplay+oncanplaythrough+onchange+onclick+oncontextmenu+oncuechange+ondblclick+ondrag+ondragend+ondragenter+ondragleave+
+ondragover+ondragstart+ondrop+ondurationchange+onemptied+onended+onerror+onfocus+oninput+oninvalid+onkeydown+onkeypress+
+onkeyup+onload+onloadeddata+onloadedmetadata+onloadstart+onmousedown+onmouseenter+onmouseleave+onmousemove+onmouseout+
+onmouseover+onmouseup+onmousewheel+onpause+onplay+onplaying+onprogress+onratechange+onrejectionhandled+onreset+onresize
++onscroll+onseeked+onseeking+onselect+onstalled+onsubmit+onsuspend+ontimeupdate+ontoggle+onunhandledrejection+onvolumechange
++onwaiting+ontransitionend+ontransitionrun+ontransitionstart+ontransitioncancel+onanimationend+onanimationiteration+
+onanimationstart+onanimationcancel+crypto+performance+onbeforeunload+onhashchange+onlanguagechange+onmessage+onoffline
++ononline+onpagehide+onpageshow+onpopstate+onstorage+onunload+origin+close+stop+focus+blur+open+alert+confirm+prompt+
+print+requestAnimationFrame+cancelAnimationFrame+postMessage+captureEvents+releaseEvents+getComputedStyle+matchMedia+
+moveTo+moveBy+resizeTo+resizeBy+scroll+scrollTo+scrollBy+getSelection+find+webkitRequestAnimationFrame+webkitCancelAnimationFrame+
+webkitCancelRequestAnimationFrame+getMatchedCSSRules+showModalDialog+webkitConvertPointFromPageToNode+webkitConvertPointFromNodeToPage+
+openDatabase+setTimeout+clearTimeout+setInterval+clearInterval+atob+btoa+customElements+visualViewport+isSecureContext+fetch+ HTTP/1.1" 200 -
+```
+위 로그는 PS4에서 전송된 PS4가 사용하는 window property인데 Safari에서 사용하는 window property와 비교해서 PS4에서만 사용하는 property가 존재하는지 확인해봤는데 `openDatabase` property는 Safari에서는 지원하지 않는 property였다.
+
+### 6.2. openDatabase
+openDatabase는 Web SQL Database를 사용하여 Database를 만들어주는 property입니다. Safari에서는 race condition 문제가 자주 발생해서 더이상 지원하지 않는다고 한다. https://caniuse.com/sql-storage 이 링크에 들어가서 보면 Safari 13버전부터 Web SQL Database를 지원하지 않는 것이 확인된다.
+
+### 6.3. Attack Vector
+Safari에서는 race condition 문제 때문에 지원하지 않기도 하고 DEFCON에서 발표된 취약점인 Magellan 같은 경우는 Chrome에서 RCE까지 가능했다. 이러한 점들을 미루어 봤을 때 상당히 해볼만한 Attack Vector라고 생각한다. (DEFCON 발표자료 참고<sup id="head7">[7](#foot7)</sup>)
+
+## 7. Reference
 ><b id="foot1">[[1](#head1)]</b> [ROP(Return-Oriented Programming)](https://en.wikipedia.org/wiki/Return-oriented_programming#cite_note-2)<br>
 ><b id="foot2">[[2](#head2)]</b> [JOP(Jump-Oriented Programming)](https://www.lazenca.net/pages/viewpage.action?pageId=16810290)<br>
 ><b id="foot3">[[3](#head3)]</b> Konstantin Serebryany; Derek Bruening; Alexander Potapenko; Dmitry Vyukov. ["AddressSanitizer: a fast address sanity checker"(PDF)](https://www.usenix.org/system/files/conference/atc12/atc12-final39.pdf). Proceedings of the 2012 USENIX conference on Annual Technical Conference.<br>
 ><b id="foot4">[[4](#head4)]</b> [MemorySanitizer - Clang 12 Documentation](https://clang.llvm.org/docs/MemorySanitizer.html)<br>
 ><b id="foot5">[[5](#head5)]</b> [UndefinedBehaviorSanitizer - Clang 12 Documentation](https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html)<br>
 ><b id="foot6">[[6](#head6)]</b> [Building WebKit with Clang Address Sanitizer(ASan)](https://trac.webkit.org/wiki/ASanWebKit)<br>
+><b id="foot7">[[7](#head7)]</b> [Breaking Google Home: Exploit It with SQLite(Magellan)](https://media.defcon.org/DEF%20CON%2027/DEF%20CON%2027%20presentations/DEFCON-27-Wenxiang-Qian-Yuxiang-Li-Huiyu-Wu-Breaking-Google-Home-Exploit-It-with-SQLite-Magellan.pdf)<br>
 
 
 ---
