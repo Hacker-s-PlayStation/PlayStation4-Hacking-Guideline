@@ -106,7 +106,7 @@ pip install pyyaml
 ./webkit/Tools/Scripts/run-minibrowser --gtk
 ```
 
-<img width="800" alt="스크린샷 2020-12-10 오전 10 21 20" src="https://user-images.githubusercontent.com/47859343/101708875-8cd0c480-3ad1-11eb-929e-ab7b1fafb79f.png">
+![image](https://user-images.githubusercontent.com/45416961/101721228-cbbf4400-3aea-11eb-8895-957472579115.png)
 
 위와 같이 minibrowser가 실행됨을 알 수 있다. 만약 index.html을 미니 브라우저에서 실행시키고 싶으면 아래와 같이 뒤에 index.html을 붙이면 된다.
 
