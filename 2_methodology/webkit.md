@@ -39,17 +39,15 @@
 
 ### 1.1. WebKit 이란?
 
-APPLE 에서 개발한 Safari, Chrome 등의 브라우저에서 사용되는 Open Source 렌더링 엔진이다. PS4 내부 브라우저에서도 Webkit을 사용한다. 그렇기에 우리는 해당 PS4의 웹킷을 attack vector로 삼았다.
+APPLE 에서 개발한 Safari, Chrome 등의 브라우저에서 사용되는 Open Source 렌더링 엔진이다. PS4 내부 브라우저에서도 WebKit을 사용한다. 그렇기에 우리는 해당 PS4의 웹킷을 attack vector로 삼았다.
 
-그러나 Webkit에서 User-Agent에 나오는 버전을 <strong>Freezing</strong> 하고 있어서 정확한 버전을 확인 할 수 없었고, PS4 Webkit ChangeLog를 확인해 보니 <strong>2018-12-16</strong> 이후로 SONY에서 자체적으로 fork를 떠 커스터마이징 한 것으로 추정 된 다.
+그러나 WebKit에서 User-Agent에 나오는 버전을 <strong>Freezing</strong> 하고 있어서 정확한 버전을 확인 할 수 없었고, PS4 WebKit ChangeLog를 확인해 보니 <strong>2018-12-16</strong> 이후로 SONY에서 자체적으로 fork를 떠 커스터마이징 한 것으로 추정된다. <span id="webkit">PS4 Webkit은 [이 곳](https://doc.dl.playstation.net/doc/ps4-oss/webkit.html)에서 다운 받을 수 있다.</span>
 
 ## 2. WebKit 빌드
 ### 2.1. WebKit download
 > 해당 실습은 우분투 18.04에서 2018-12-16 `a5beb7c88f12c377c3347f74776d2270fbbc79a4` 커밋 기준으로 진행 하였다.
 
-https://github.com/WebKit/webkit.git
-
-위 링크는 Webkit github 링크이다. git clone을 이용해서 가져오자.
+다음 명령어를 통해 Webkit 소스 코드를 다운 받을 수 있다.
  ```bash
  git clone https://github.com/WebKit/webkit.git
  ```
@@ -65,7 +63,7 @@ git checkout a5beb7c88f12c377c3347f74776d2270fbbc79a4
 sudo apt install cmake ruby libicu-dev gperf ninja-build
 ```
 
-또한 version에 따라 설치에 필요한 것들이 다를 수 있으니 그때 마다 설치해 주어야 한다.
+또한 version에 따라 설치에 필요한 것들이 다를 수 있으니 그때마다 설치해 주어야 한다.
 
 ### 2.2. JSC 빌드
 JSC 빌드 명령어는 다음과 같다. 
@@ -73,10 +71,10 @@ JSC 빌드 명령어는 다음과 같다.
 ./webkit/Tools/Scripts/build-webkit --jsc-only --debug
 ```
 
-- `jsc-only` : jsc만 빌드함
-- `debug` : debug 모드로 빌드함 (debug 모드가 아니면 나중에 분석 할 때 describe라는 객체 등의 주소를 알어오는 함수를 못 사용함)
+- `jsc-only` : jsc만 빌드
+- `debug` : debug 모드로 빌드 (debug 모드가 아니면 나중에 분석 할 때 `describe`라는 객체 등의 주소를 알아오는 함수를 사용할 수 없다.)
 
-이후 빌드에 성공하면 다음과 같이 JSC를 실행하면 command line이 뜨는 것을 확인 할 수 있다.
+이후 빌드에 성공하면 다음과 같이 JSC를 실행했을 때 command line이 뜨는 것을 확인 할 수 있다.
 
 ```bash
 ./webkit/WebKitBuild/Debug/bin/jsc
@@ -99,49 +97,47 @@ apt install libwoff-dev flatpak flatpak-builder python-pip
 pip install pyyaml
 ```
 
-다음 명령어 실행 뒤 `xdg-dbus-proxy` 와 `bwrap 0.3.1` 도 설치하여 make 해주어야 한다.
+다음 명령어 실행 뒤 `xdg-dbus-proxy` 와 `bwrap 0.3.1` 도 설치해주어야 한다.
+- [xdg-dbus-proxy](https://github.com/flatpak/xdg-dbus-proxy)
+- [bwrap 0.3.1](https://launchpad.net/ubuntu/+source/bubblewrap/0.3.1-1ubuntu1)
 
-- `xdg-dbus-proxy`  : https://github.com/flatpak/xdg-dbus-proxy
-- `bwrap 0.3.1` : https://launchpad.net/ubuntu/+source/bubblewrap/0.3.1-1ubuntu1
-
-위 링크들을 참고하여 설치한 뒤 `/webkit/Source/WebKit/UIProcess/gtk/WaylandCompositor.cpp` 파일에 `#include <EGL/eglmesaext.h>` 헤더를 한 줄 추가해야 한다. 
-
-EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
+위 링크들을 참고하여 설치한 뒤 `/webkit/Source/WebKit/UIProcess/gtk/WaylandCompositor.cpp` 파일에 `#include <EGL/eglmesaext.h>` 헤더를 한 줄 추가해야 한다. EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
 
 모든 선수 작업을 마무리 한 뒤 `/webkit/Tools/Scripts/build-webkit --gtk --debug` 를 실행하면 된다. (실행 할 때 RAM 16GB 정도 할당 권장)
 
-- `debug` : debug 모드로 빌드함 (debug 모드가 아니면 나중에 분석 할 때 describe라는 객체 등의 주소를 알어오는 함수를 못 사용함)
-- `gtk` : gtk 모드로 빌드함
+- `debug` : debug 모드로 빌드
+- `gtk` : gtk 모드로 빌드
 
 ### 2.4. PS4 Webkit 빌드
-PS4 Webkit은 `https://doc.dl.playstation.net/doc/ps4-oss/webkit.html` 이 곳에서 다운 받을 수 있다.
-
-다운을 받은 뒤  열어 보면 다음과 같이 `WebKit-601.2.7-800`과 `WebKit-606.4.6-800` 두 개의 폴더가 있음을 확인 할 수 있다. (8.00 기준)
+서론에서 [언급](#webkit)했던 PS4 WebKit을 다운 받은 뒤 열어 보면 다음과 같이 `WebKit-601.2.7-800`과 `WebKit-606.4.6-800` 두 개의 폴더가 있음을 확인 할 수 있다. (8.00 기준)
 
 <img width="278" alt="webkit" src="https://user-images.githubusercontent.com/47859343/101600855-3adf5e80-3a3f-11eb-95d7-a170b238a0dc.png">
 
-추정상 JSTest와 LayoutTest로 분류해 둔거 같다. 또한 606 version만 빌드가 되고, GTK는 아예 빌드가 안 된다. 그 외에 JSC 빌드는 기존 Webkit과 똑같다. 
+추정상 JSTest와 LayoutTest로 분류해 둔 것 같다. [PS4 Dev Wiki](https://www.psdevwiki.com/ps4/Working_Exploits#JiT_removed_from_webbrowser)에 1.76이후 두개의 프로세스로 분할 되었다는 내용이 언급되어 있다.
+> On FW <= 1.76, you could map RWX memory from ROP by abusing the JiT functionality and the sys_jitshm_create and sys_jitshm_alias system calls. This however was fixed after 1.76, as WebKit has been split into two processes. One handles javascript compilation and the other handles other web page elements like image rendering and DOM. The second process will request JiT memory upon hitting JavaScript via IPC (Inter-Process Communication). Since we no longer have access to the process responsible for JiT, we can no longer (at least currently), map RWX memory for proper code execution unless the kernel is patched.
+
+또한, PC 상에서 GTK는 아예 빌드가 안 되고 JSC는 606 version만 빌드가 된다.
 
 ### 2.5. Docker 환경
-[여기](https://hub.docker.com/r/gustjr1444/webkit/tags?page=1&ordering=last_updated)에 들어가면 그동안 우리가 취약점 분석을 위해 구축해둔 Webkit Docker 환경들을 다운 받을 수 있다. 여러 CVE 취약점 발생 환경부터, Webcore 분석 , ps4 Webkit 들을 구축해 두었으니, 활용하면 좋을 것 같다.
+[여기](https://hub.docker.com/r/gustjr1444/webkit/tags?page=1&ordering=last_updated)에 들어가면 그동안 우리가 취약점 분석을 위해 구축해둔 Webkit Docker 환경들을 다운 받을 수 있다. 여러 CVE 취약점, WebCore, ps4 Webkit의 분석을 목적으로 구축해 두었으니, 활용하면 좋을 것 같다.
 
 ## 3. PS4 WebKit의 특징
 ### 3.1. NO JIT
-Browser exploit 에서 주로 사용하는 기법이 JIT을 활용해서 fake object 와 RWX 메모리 영역을 만들어서 공격을 시도하는 것인데 해당 PS4의 브라우저에서는 JIT이 꺼져있다.
+Browser exploit 에서 주로 사용하는 기법이 `JIT`을 활용해서 fake object 와 RWX 메모리 영역을 만들어서 공격을 시도하는 것이다. 그러나 PS4의 브라우저에서는 JIT이 꺼져있다.
 
 <img width="1639" alt="스크린샷 2020-12-09 오후 7 43 46" src="https://user-images.githubusercontent.com/47859343/101619723-011a5200-3a57-11eb-9e6e-d2813fca28fb.png">
 
 다음과 같이 UART LOG로 확인해 보면 JIT이 비활성화 되있는 것을 알 수 있다.
 
 ### 3.2. NO Garbage Collector
-JIT과 마찬가지로 browser exploit에서 활용되는 Garbage Collector도 PS4에서 꺼져있다.
+JIT과 마찬가지로 Browser exploit에서 활용되는 Garbage Collector도 `PS4`에서는 꺼져있다.
 
 <img width="732" alt="스크린샷 2020-12-09 오후 7 44 04" src="https://user-images.githubusercontent.com/47859343/101620296-b4834680-3a57-11eb-830f-620004bc519d.png">
 
 마찬가지로 UART LOG를 보면 꺼져있음을 확인 할 수 있다.
 
 ### 3.3. NO WASM
-WebAssembly 또한 PS4 브라우저에서 지원을 안한다. 다음과 같이 WebAssembly 객체를 만들 때 오류가 발생하면 alert로 메세지를 띄우게끔 테스트를 하면,
+`WebAssembly` 또한 PS4 브라우저에서 지원을 안한다. WebAssembly 객체를 만들 때 오류가 발생하면 alert로 메세지를 띄우게끔 테스트를 해 보았더니,
 
 ```javascript
 <!DOCTYPE html>
@@ -162,7 +158,7 @@ WebAssembly 또한 PS4 브라우저에서 지원을 안한다. 다음과 같이 
 
 ![nowasm](https://user-images.githubusercontent.com/47859343/101623898-73d9fc00-3a5c-11eb-85b9-52b1717e9d80.jpeg)
 
-PS4에서 오류가 발생하여 `"ReferenceError: Can't find variable: WebAssembly"`이 출력 되는 것을 확인 할 수 있다. 즉, WebAssembly가 없다.
+PS4에서 오류가 발생하여 `"ReferenceError: Can't find variable: WebAssembly"`이 출력 되는 것을 확인 할 수 있었다. 확실히 WebAssembly는 없다.
 
 ## 4. PS4 WebKit exploit 방법론
 ### 4.1. Return Oriented Programming, Jump Oriented Programming
