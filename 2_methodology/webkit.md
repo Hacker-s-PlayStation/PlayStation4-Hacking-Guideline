@@ -48,7 +48,10 @@ sudo apt install cmake ruby libicu-dev gperf ninja-build
 #### 2. JSC 빌드
 <br>
 
-JSC 빌드 명령어는 다음과 같다. `./webkit/Tools/Scripts/build-webkit --jsc-only --debug`
+JSC 빌드 명령어는 다음과 같다. 
+```
+./webkit/Tools/Scripts/build-webkit --jsc-only --debug
+```
 <br>
 
 `jsc-only` : jsc만 빌드함
@@ -59,7 +62,9 @@ JSC 빌드 명령어는 다음과 같다. `./webkit/Tools/Scripts/build-webkit -
 이후 빌드에 성공하면 다음과 같이 JSC를 실행하면 command line 이 뜨는 것을 확인 할 수 있다.
 <br>
 
-`./webkit/WebKitBuild/Debug/bin/jsc`
+```
+./webkit/WebKitBuild/Debug/bin/jsc
+```
 <br>
 ```
 seohojin@ubuntu:~/Desktop$ ./webkit/WebKitBuild/Debug/bin/jsc 
@@ -99,7 +104,7 @@ EGL_WAYLAND_BUFFER_WL이 없다는 오류가 뜰 수 있기 때문이다.
 ```
 ./webkit/Tools/Scripts/build-webkit --gtk
 ```
- 를 실행하면 된다. ( 실행 할 때 RAM 16GB 정도 할당 권장 )
+ 위 명령어를 실행하면 된다. ( 실행 할 때 RAM 16GB 정도 할당 권장 )
 
 <br>
 
