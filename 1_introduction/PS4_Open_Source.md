@@ -26,6 +26,7 @@ uart에 나오는 [VCS], [BESDK], [BECPLYR]과 같은 문자열들을 아래 사
 해당 라이브러리들은 소니에서 자체적으로 만든 것일 수도 있지만, 오픈소스를 사용했을 확률이 크기 때문에, 라이브러리를 여러 오픈소스 라이브러리와 매치시키면 알아낼 수 있을 것이다.<br><br>
 이 방법으로 하나의 라이브러리를 타겟으로 잡아 취약점 분석을 진행하면 좋은 방법론이 될 수 있을 것 같다.<br><br>
 
+---
 
 # Contents <!-- omit in toc -->
 [메인화면](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/README.md)<br>
