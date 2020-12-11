@@ -502,11 +502,11 @@ int main(){
 ![image](https://user-images.githubusercontent.com/39231485/101734324-70e61680-3b03-11eb-8315-cca6132f0dfe.png)<br>
 dlsym이 작동하지 않아서 이 함수의 오프셋을 넣고 함수 포인터를 호출시켰다.
 ```
- ► 0x7ffff7b978c0 <sceKernelGetCompiledSdkVersion+22720>    mov    rdi, qword ptr [rdi]
-   0x7ffff7b978c3 <sceKernelGetCompiledSdkVersion+22723>    test   rdi, rdi
-   0x7ffff7b978c6 <sceKernelGetCompiledSdkVersion+22726>    je     sceKernelGetCompiledSdkVersion+22733 <sceKernelGetCompiledSdkVersion+22733>
+ ► 0x7ffff7b978c0 <sce::Xml::Dom::NodeList::clear()>       mov    rdi, qword ptr [rdi]
+   0x7ffff7b978c3 <sce::Xml::Dom::NodeList::clear()+3>     test   rdi, rdi
+   0x7ffff7b978c6 <sce::Xml::Dom::NodeList::clear()+6>     je     sce::Xml::Dom::NodeList::clear()+13 <sce::Xml::Dom::NodeList::clear()+13>
     ↓
-   0x7ffff7b978cd <sceKernelGetCompiledSdkVersion+22733>    ret  
+   0x7ffff7b978cd <sce::Xml::Dom::NodeList::clear()+13>    ret
 ```
 해당 함수가 잘 호출 된 것을 확인할 수 있다. 그러므로 만약 퍼징을 돌린다고 하였을 때, 특정 함수에 여러 값들을 넣어보며 테스트 하는 것이 가능하다.
 
