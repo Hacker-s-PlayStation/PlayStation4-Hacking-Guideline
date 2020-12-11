@@ -26,7 +26,7 @@
     - [4.2.5. Step 5 : 테스트](#425-step-5--테스트)
   - [4.3. 문제점](#43-문제점)
 - [5. 1-day 취약점 분석 방법론](#5-1-day-취약점-분석-방법론)
-  - [5.1. Chromium](#51-chromium)
+  - [5.1. bugs.chromium](#51-chromium)
   - [5.2. exploit-db](#52-exploit-db)
   - [5.3. Bugzilla](#53-bugzilla)
   - [5.4. WebKit regression test](#54-webkit-regression-test)
@@ -369,10 +369,10 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 ## 5. 1-day 취약점 분석 방법론
 다음으로는 본 프로젝트에서 1-day 취약점을 분석하기 위해 수립 및 시행한 방법론을 소개하고자 한다.
-### 5.1. Chromium
+### 5.1. bugs.chromium
 ![image](https://user-images.githubusercontent.com/45416961/101621717-771fb880-3a59-11eb-9eca-bce3ecbad852.png)
 ![image](https://user-images.githubusercontent.com/45416961/101621198-c9aca500-3a58-11eb-9b20-12056b95fa12.png)
-가장 먼저 [Chromium](https://bugs.chromium.org/p/project-zero/issues/list?sort=-reported&q=webkit&can=1)에서 Project-zero 팀이 report 한 취약점들을 분석하고, PS4에 포팅하고, 코드 오디팅을 수행했다. 거의 모든 취약점들을 테스트해보았지만 이미 패치가 되었거나, PoC에 사용되는 모듈이 PS4에는 존재하지 않는 경우가 대부분이었다. 특히 JSC 취약점은 대개 JIT 컴파일러를 기반으로 하기 때문에 별다른 수확은 없었다.
+가장 먼저 [bugs.chromium](https://bugs.chromium.org/p/project-zero/issues/list?sort=-reported&q=webkit&can=1)에서 Project-zero 팀이 report 한 취약점들을 분석하고, PS4에 포팅하고, 코드 오디팅을 수행했다. 거의 모든 취약점들을 테스트해보았지만 이미 패치가 되었거나, PoC에 사용되는 모듈이 PS4에는 존재하지 않는 경우가 대부분이었다. 특히 JSC 취약점은 대개 JIT 컴파일러를 기반으로 하기 때문에 별다른 수확은 없었다.
 
 ### 5.2. exploit-db
 ![image](https://user-images.githubusercontent.com/45416961/101621658-6707d900-3a59-11eb-8f9a-000d03573bc7.png)
