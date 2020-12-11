@@ -222,7 +222,7 @@ TeensyLoader를 다운로드 받은 뒤 실행해 준다. git clone 받은 폴�
 		SPIway.py COMx erasechip
 ```
 
-dump 뿐만 아니라 write도 가능하다. 실제로 PS4에서 NOR 칩의 일부 섹션이 손상되어 BLOD (Blue Light of Death) 문제가 발생한 경우, syscon ROM을 덤프하고 `00 00 00 00..` 영역을 `FF FF FF FF...` 로 덮어 쓴 뒤 vwrite 해 줌으로써 수리를 하기도 했다. 이 write 기능을 추후에 이용할 수 있지 않을까 싶다.
+dump 뿐만 아니라 write도 가능하다. 실제로 PS4에서 NOR 칩의 일부 섹션이 손상되어 BLOD (Blue Light of Death) 문제가 발생한 경우, sflash를 덤프하고 `00 00 00 00..` 영역을 `FF FF FF FF...` 로 덮어 쓴 뒤 write 해 줌으로써 수리를 하기도 했다. 이 write 기능을 추후에 이용할 수 있지 않을까 싶다.
 
 ## 5. Reference
 > - [SYSGLITCH_DOWNGRADE (2).pdf](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/37e4d1b3-06ea-4ed1-ab61-ce45f6146c7b/SYSGLITCH_DOWNGRADE_(2).pdf)
