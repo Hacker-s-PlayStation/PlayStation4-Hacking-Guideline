@@ -43,7 +43,7 @@
 
 APPLE 에서 개발한 Safari, Chrome 등의 브라우저에서 사용되는 Open Source 렌더링 엔진이다. PS4 내부 브라우저에서도 WebKit을 사용한다. 그렇기에 우리는 해당 PS4의 웹킷을 attack vector로 삼았다.
 
-그러나 WebKit에서 User-Agent에 나오는 버전을 <strong>Freezing</strong> 하고 있어서 정확한 버전을 확인 할 수 없었고, PS4 WebKit ChangeLog를 확인해 보니 <strong>2018-12-16</strong> 이후로 SONY에서 자체적으로 fork를 떠 커스터마이징 한 것으로 추정된다. <span id="webkit">PS4 Webkit은 [이 곳](https://doc.dl.playstation.net/doc/ps4-oss/webkit.html)에서 다운 받을 수 있다.</span>
+그러나 WebKit에서 User-Agent에 나오는 버전을 <strong>Freezing</strong> 하고 있어서 정확한 버전을 확인 할 수 없었고, PS4 WebKit ChangeLog를 확인해 보니 <strong>2018-12-16</strong> 이후로 SONY에서 자체적으로 fork를 해서 커스터마이징 한 것으로 추정된다. <span id="webkit">PS4 Webkit은 [이 곳](https://doc.dl.playstation.net/doc/ps4-oss/webkit.html)에서 다운 받을 수 있다.</span>
 
 ## 2. WebKit 빌드
 ### 2.1. WebKit download
@@ -98,7 +98,7 @@ apt install libwoff-dev flatpak flatpak-builder python-pip
 pip install pyyaml
 ```
 
-다음 명령어 실행 뒤 `xdg-dbus-proxy` 와 `bwrap 0.3.1` 도 설치해주어야 한다.
+위 명령어 실행 뒤 `xdg-dbus-proxy` 와 `bwrap 0.3.1` 도 설치해주어야 한다.
 - [xdg-dbus-proxy](https://github.com/flatpak/xdg-dbus-proxy)
 - [bwrap 0.3.1](https://launchpad.net/ubuntu/+source/bubblewrap/0.3.1-1ubuntu1)
 
@@ -106,14 +106,14 @@ pip install pyyaml
 
 모든 선수 작업을 마무리 한 뒤 `./Tools/Scripts/build-webkit --gtk` 를 실행하면 된다. (실행 할 때 RAM 16GB 정도 할당 권장)
 
-빌드가 되고 난 뒤 다음 명령어를 치면 
+빌드가 완료된 후 다음 명령어를 치면 
 ```bash
 ./Tools/Scripts/run-minibrowser --gtk
 ```
 
 ![image](https://user-images.githubusercontent.com/45416961/101721228-cbbf4400-3aea-11eb-8895-957472579115.png)
 
-위와 같이 minibrowser가 실행됨을 알 수 있다. 만약 index.html을 미니 브라우저에서 실행시키고 싶으면 아래와 같이 인자로 전달해 주면 된다.
+위와 같이 minibrowser가 실행됨을 알 수 있다. 만약 html 파일을 미니 브라우저에서 실행시키고 싶으면 아래와 같이 인자로 전달해 주면 된다.
 
 ```bash
 ./Tools/Scripts/run-minibrowser --gtk index.html
@@ -134,18 +134,18 @@ pip install pyyaml
 
 ## 3. PS4 WebKit의 특징
 ### 3.1. NO JIT
-Browser exploit 에서 주로 사용하는 기법이 `JIT`을 활용해서 fake object 와 RWX 메모리 영역을 만들어서 공격을 시도하는 것이다. 그러나 PS4의 브라우저에서는 JIT이 꺼져있다.
+Browser exploit 에서 주로 사용하는 기법이 `JIT`을 활용해서 fake object 와 RWX 메모리 영역을 만들어서 공격을 시도하는 것이다. 그러나 PS4의 브라우저에서는 JIT이 비활성화 되어 있다.
 
 <img width="1639" alt="스크린샷 2020-12-09 오후 7 43 46" src="https://user-images.githubusercontent.com/47859343/101619723-011a5200-3a57-11eb-9e6e-d2813fca28fb.png">
 
 다음과 같이 UART LOG로 확인해 보면 JIT이 비활성화 되있는 것을 알 수 있다.
 
 ### 3.2. NO Garbage Collector
-JIT과 마찬가지로 Browser exploit에서 활용되는 Garbage Collector도 `PS4`에서는 꺼져있다.
+JIT과 마찬가지로 Browser exploit에서 활용되는 Garbage Collector도 `PS4`에서는 비활성화 되어 있다.
 
 <img width="732" alt="스크린샷 2020-12-09 오후 7 44 04" src="https://user-images.githubusercontent.com/47859343/101620296-b4834680-3a57-11eb-830f-620004bc519d.png">
 
-마찬가지로 UART LOG를 보면 꺼져있음을 확인 할 수 있다.
+마찬가지로 UART LOG를 보면 비활성화 되어 있음을 확인 할 수 있다.
 
 ### 3.3. NO WASM
 `WebAssembly` 또한 PS4 브라우저에서 지원을 안한다. WebAssembly 객체를 만들 때 오류가 발생하면 alert로 메세지를 띄우게끔 테스트를 해 보았더니,
