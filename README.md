@@ -5,6 +5,7 @@
 PS4의 보안성 향상을 목적으로 Jailbreak를 시도하여 Bug Bounty를 해보려했으나 실패했다.
 프로젝트 기간 내에 Jailbreak를 하는 데는 실패했으나, 후에 PS4의 취약점 분석을 시도할 분들에게 도움이 되고자, 우리가 진행했던 내용들을 공유하고자 한다.<br><br>
 
+If you want to read this article in English, go to this [page](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline-ENG).
 
 # Author
 > Best of the Best 9기 취약점분석 트랙 Hacker's PlayStation 팀
