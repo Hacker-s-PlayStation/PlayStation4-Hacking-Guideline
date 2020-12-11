@@ -26,7 +26,7 @@
     - [4.2.5. Step 5 : 테스트](#425-step-5--테스트)
   - [4.3. 문제점](#43-문제점)
 - [5. 1-day 취약점 분석 방법론](#5-1-day-취약점-분석-방법론)
-  - [5.1. bugs.chromium](#51-chromium)
+  - [5.1. bugs.chromium](#51-bugs.chromium)
   - [5.2. exploit-db](#52-exploit-db)
   - [5.3. Bugzilla](#53-bugzilla)
   - [5.4. WebKit regression test](#54-webkit-regression-test)
