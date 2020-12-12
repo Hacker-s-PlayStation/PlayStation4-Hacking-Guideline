@@ -1,20 +1,20 @@
-- [1. Hacking the PS4<sup id="head1">1</sup>](#1-hacking-the-ps4sup-idhead11sup)
+- [1. Hacking the PS4](#1-hacking-the-ps4)
   - [1.1. 요약](#11-요약)
 - [2. THIS IS FOR THE PWNERS: EXPLOITING A WEBKIT 0-DAY IN PLAYSTATION 4](#2-this-is-for-the-pwners-exploiting-a-webkit-0-day-in-playstation-4)
-  - [2.1. 요약](#21-요약) 
-  - [2.2. 차이점](#22-차이점) 
+  - [2.1. 요약](#21-요약)
+  - [2.2 차이점](#22-차이점)
 - [3. Reference](#3-reference)
 
 
 
 ---
 
-# Related_Work <!-- omit in toc -->
+# Related Work <!-- omit in toc -->
 
-## 1. Hacking the PS4<sup id="head1">[1](#foot1)</sup>
+## 1. Hacking the PS4
 
 ### 1.1. 요약
-CTurt가 작성하였으며, WebKit 취약점을 PS4에 포팅하는 것을 맨 처음 시도하였으며, 해당 글에서는 WebKit exploit 부터 Kernel Exploit까지 Full Chain Exploit한 것을 자세하게 기술하였다. 
+CTurt가 작성<sup id="head1">[1](#foot1)</sup>하였으며, WebKit 취약점을 PS4에 포팅하는 것을 맨 처음 시도하였으며, 해당 글에서는 WebKit exploit 부터 Kernel Exploit까지 Full Chain Exploit한 것을 자세하게 기술하였다. 
 
 CTurt는 웹킷 취약점 과 Kernel 취약점 모두 우리가 채택한 방법론과 같이 1-day를 PS4에 포팅하여 진행하였다. CTurt와 다른 점이 있다면 우리는 1-day를 통해 최신 버전 펌웨어 Exploit하는 것을 목표로 진행하였고 CTurt는 구버전 PS4를 목표로 진행하였다. 웹킷에서는 2012년에 패치된 힙 버퍼 오버플로우 취약점을 PS4에 포팅해서 Exploit하였고, 커널은 2014년에 패치된 Linux에서 발생한 BadIRET 취약점이 FreeBSD에도 똑같이 작용해서 이를 PS4에 포팅하여 Exploit 하였다.
 
@@ -26,7 +26,7 @@ CTurt가 작성한 글은 상당히 오래전에 작성된 것이긴 하지만 P
 
 ### 2.1. 요약
 
-2020년도 Black hat 컨퍼런스에서 발표된 PS4 0-Day exploit 관련 문서이다. 
+2020년도 Black hat 컨퍼런스에서 발표된 PS4 0-Day exploit 관련 문서<sup id="head2">[2](#foot2)</sup>이다. 
 
 해당 문서에서의 취약점은 fuzzer에 의해 발견 되었다. `ValidationMessage` 레이아웃 업데이트 중에 인스턴스를 계속 삭제시킬수 있는 문제였고, exploit은
 `WebCore::ValidationMessage::buildBubbleTree` 에서 발생하는 Use-After-Free 취약점 및 heap spay를 사용한다. 또한 FreeBSD를 설치하고, Webkit PS4를 다운 받아 빌드하여 PS4 환경에 최대한 가깝게 구축하여야 한다.
@@ -54,7 +54,7 @@ CTurt가 작성한 글은 상당히 오래전에 작성된 것이긴 하지만 P
 [1. Jailbreak](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/1_introduction/Jailbreak.md)<br>
 [2. PS4 Open Source](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/1_introduction/PS4_Open_Source.md)<br>
 [3. Tools](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/1_introduction/Tools.md)<br>
-[4. Related_Work](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/1_introduction/Related_Work.md)<br>
+[4. Related Work](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/1_introduction/Related_Work.md)<br>
 
 #### 프로젝트 접근 방법론 <!-- omit in toc -->
 [1. WebKit](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/blob/main/2_methodology/WebKit.md)<br>
