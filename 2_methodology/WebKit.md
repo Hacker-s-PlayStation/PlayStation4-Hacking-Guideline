@@ -41,9 +41,7 @@
 ## 1. 개요
 ### 1.1. WebKit 이란?
 
-APPLE 에서 개발한 Safari, Chrome 등의 브라우저에서 사용되는 Open Source 렌더링 엔진이다. PS4 내부 브라우저에서도 WebKit을 사용한다. 그렇기에 우리는 해당 PS4의 웹킷을 attack vector로 삼았다.
-
-그러나 WebKit에서 User-Agent에 나오는 버전을 <strong>Freezing</strong> 하고 있어서 정확한 버전을 확인 할 수 없었고, PS4 WebKit ChangeLog를 확인해 보니 <strong>2018-12-16</strong> 이후로 SONY에서 자체적으로 fork를 해서 커스터마이징 한 것으로 추정된다. <span id="webkit">PS4 Webkit은 [이 곳](https://doc.dl.playstation.net/doc/ps4-oss/webkit.html)에서 다운 받을 수 있다.</span>
+APPLE 에서 개발한 Safari, Chrome 등의 브라우저에서 사용되는 Open Source 렌더링 엔진이다. PS4 내부 브라우저에서도 WebKit을 사용하기 때문에 WebKit의 취약점 탐색을 시도했다. 먼저 PS4에서 사용하는 WebKit의 버전을 확인하려고 했다. Apple에서 User-Agent에 나오는 버전을 <strong>Freezing</strong> 해두었기 때문에 User-Agent 정보를 가지고는 정확한 버전을 확인 할 수 없었다. 대신에 [PS4에 사용되는 WebKit 소스코드를 모아둔 사이트](https://doc.dl.playstation.net/doc/ps4-oss/webkit.html)가 존재하여 해당 사이트의 소스코드를 이용했다. 해당 소스코드의 ChangeLog가 2018년 12월 16일에서 끊겨있는 것으로 보아 Sony는 WebKit을 main repository에서 2018년 12월 16일에 fork를 해온 것으로 추측한다.
 
 ## 2. WebKit 빌드
 ### 2.1. WebKit download
@@ -70,15 +68,15 @@ sudo apt install cmake ruby libicu-dev gperf ninja-build
 
 ### 2.2. JSC 빌드
 
-JSC 빌드 명령어는 다음과 같다. **빌드 명령어에 나오는 모든 경로는 웹킷 루트 디렉토리를 기준으로 한다.**
+JavaScriptCore(JSC)는 WebKit에서 사용하는 Javascript 처리 모듈로, JSC 빌드 명령어는 다음과 같다. **빌드 명령어에 나오는 모든 경로는 웹킷 루트 디렉토리를 기준으로 한다.**
 ```bash
 ./Tools/Scripts/build-webkit --jsc-only --debug
 ```
 
 - `jsc-only` : jsc만 빌드
-- `debug` : debug 모드로 빌드 (debug 모드가 아니면 나중에 분석 할 때 `describe`라는 객체 등의 주소를 알아오는 함수를 사용할 수 없다.)
+- `debug` : debug 모드로 빌드 (debug 모드가 아니면 나중에 분석 할 때 `describe`라는 객체 등의 주소를 알아오는 함수와 같이 debug모드에서만 사용할 수 있는 함수를 사용할 수 없다.)
 
-이후 빌드에 성공하면 다음과 같이 JSC를 실행했을 때 command line이 뜨는 것을 확인 할 수 있다.
+이후 빌드에 성공하면 다음과 같이 JSC를 실행했을 때 Javascript interpreter가 뜨는 것을 확인 할 수 있다.
 
 ```bash
 $ ./WebKitBuild/Debug/bin/jsc 
@@ -88,7 +86,8 @@ $ ./WebKitBuild/Debug/bin/jsc
 ```
 
 ### 2.3. GTK 빌드
-GTK를 빌드하기 위해서는 먼저 다음과 같은 선수 작업이 필요하다.
+
+GTK를 빌드하면 브라우저의 최소한의 기능을 모아둔 mini-browser가 만들어진다. mini-browser를 이용하여 page rendering 모듈인 WebCore를 테스트할 수 있다. GTK를 빌드하기 위해서는 먼저 다음과 같은 선수 작업이 필요하다.
 
 ```bash
 ./Tools/gtk/install-dependencies
@@ -124,7 +123,7 @@ pip install pyyaml
 
 <img width="278" alt="webkit" src="https://user-images.githubusercontent.com/47859343/101600855-3adf5e80-3a3f-11eb-95d7-a170b238a0dc.png">
 
-추정상 JSTest와 LayoutTest로 분류해 둔 것 같다. [PS4 Dev Wiki](https://www.psdevwiki.com/ps4/Working_Exploits#JiT_removed_from_webbrowser)에 1.76이후 두개의 프로세스로 분할 되었다는 내용이 언급되어 있다.
+추정상 JSC 프로세스와 WebCore 프로세스로 분리해 둔 것 같다. [PS4 Dev Wiki](https://www.psdevwiki.com/ps4/Working_Exploits#JiT_removed_from_webbrowser)에 1.76이후 두개의 프로세스로 분할 되었다는 내용이 언급되어 있다.
 > On FW <= 1.76, you could map RWX memory from ROP by abusing the JiT functionality and the sys_jitshm_create and sys_jitshm_alias system calls. This however was fixed after 1.76, as WebKit has been split into two processes. One handles javascript compilation and the other handles other web page elements like image rendering and DOM. The second process will request JiT memory upon hitting JavaScript via IPC (Inter-Process Communication). Since we no longer have access to the process responsible for JiT, we can no longer (at least currently), map RWX memory for proper code execution unless the kernel is patched.
 
 또한, PC 상에서 GTK는 아예 빌드가 안 되고 JSC는 606 version만 빌드가 된다.
