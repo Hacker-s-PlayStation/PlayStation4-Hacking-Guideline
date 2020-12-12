@@ -33,9 +33,7 @@ CTurt가 작성한 글은 상당히 오래전에 작성된 것이긴 하지만 P
 
 
 <br>
-해당 취약점을 사용하기 위해 ASLR 우회가 필요하고, 6.xx 버전 대 Firmware(이하 FW) 에서는 이전에 알려진 `bad-hoist`취약점에서 메모리 매핑 사용 부분이 있었기 때문에 html object Leak을 할 수 있었다. (그러나 이는 6.xx 버전 대 에서만 동작 하였기 때문에, 7.xx 버전 대 FW 에서는 brute force를 시도하여 객체의 주소 값을 찾아 내었다.)
-<br>
-이후 객체를 재사용하기 위해 대상 객체 할당 직전과 직후에 ValidationMessage(48 byte) 크기의 객체를 spray 한다. 이후 ValidationMessage 인스턴스와 주변 객체를 free 하여 smallPage에 캐시한다. 그리고 대상 객체와 같은 크기의 객체를 heap 에 다시 spray 해준다. 
+해당 취약점을 사용하기 위해 ASLR 우회가 필요하고, 6.xx 버전 대 Firmware(이하 FW) 에서는 이전에 알려진 `bad-hoist`취약점에서 메모리 매핑 사용 부분이 있었기 때문에 html object Leak을 할 수 있었다. (그러나 이는 6.xx 버전 대 에서만 동작 하였기 때문에, 7.xx 버전 대 FW 에서는 brute force를 시도하여 객체의 주소 값을 찾아 내었다.) 이후 객체를 재사용하기 위해 대상 객체 할당 직전과 직후에 ValidationMessage(48 byte) 크기의 객체를 spray 한다. 이후 ValidationMessage 인스턴스와 주변 객체를 free 하여 smallPage에 캐시한다. 그리고 대상 객체와 같은 크기의 객체를 heap 에 다시 spray 해준다. 
 
 <br>
 
