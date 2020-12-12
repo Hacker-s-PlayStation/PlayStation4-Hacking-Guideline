@@ -36,7 +36,7 @@ CTurt가 작성한 글은 상당히 오래전에 작성된 것이긴 하지만 P
 그 후, `JSArrayBufferView` 객체의 주소를 leak 해서 해당 주소의 길이 필드를 손상 시켜 R/W 프리미티브를 설정한다. 그 다음 `JSArrayBufferView`객체의 데이터 버퍼 참조 필드를 손상 시켜 ARBITRARY R/W를 활성화 시킨다. 이후 vtable 값을 덮어 `HTMLTextAreaElement`의 제어하는 포인터를 가리키게 하고, 제어하는 주소에 대한 호출을 발생시켜 이후 다음 단계를 구현 하기 위해 ROP, JOP를 수행한다.
 해당 exploit은 [Synacktiv의 Github 저장소](https://github.com/synacktiv/PS4-webkit-exploit-6.XX)에서 확인 할 수 있다.
 
-6.xx 버전 대 에서는 exploit을 성공하였지만, 7.xx 버전에서는 위에서 말한 이유로 좋은 결과를 얻지 못하였다.
+6.xx 버전에서는 exploit을 성공하였지만, 7.xx 버전에서는 위에서 말한 이유로 좋은 결과를 얻지 못하였다.
 
 ### 2.2 차이점
 우리의 프로젝트는 1-Day 취약점 탐색을 목표로 진행하였지만, Black Hat 에서 발표된 내용은 0-Day 를 연구해서 exploit을 진행하였다. 또한 본 문서에서는 환경구성을 할때 freeBSD 내부에다가 PS4 Webkit을 구축하여 최대한 PS4와 유사한 환경에서 분석을 진행했지만, 본 프로젝트는 PS4 Webkit의 ChangeLog를 이용해서 fork를 진행한 시점을  유추하여 checkout 한 후, 1-day 테스트를 진행하였다.
