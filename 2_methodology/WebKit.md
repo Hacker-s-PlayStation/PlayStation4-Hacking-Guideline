@@ -133,7 +133,7 @@ pip install pyyaml
 
 ## 3. PS4 WebKit의 특징
 ### 3.1. NO JIT
-Browser exploit 에서 주로 사용하는 기법이 `JIT`을 활용해서 fake object 와 RWX 메모리 영역을 만들어서 공격을 시도하는 것이다. 그러나 PS4의 브라우저에서는 JIT이 비활성화 되어 있다.
+Browser exploit 에서 주로 사용하는 기법은 `JIT`을 활용해서 fake object 와 RWX 메모리 영역을 만들어서 공격을 시도하는 것이다. 그러나 PS4의 브라우저에서는 JIT이 비활성화 되어 있다.
 
 <img width="1639" alt="스크린샷 2020-12-09 오후 7 43 46" src="https://user-images.githubusercontent.com/47859343/101619723-011a5200-3a57-11eb-9e6e-d2813fca28fb.png">
 
