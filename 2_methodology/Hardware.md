@@ -28,9 +28,9 @@
 # Hardware <!-- omit in toc -->
 
 ## 1. Hardware Overview
-> 본 프로젝트에서 하드웨어적으로 syscon dump와 sflash dump를 진행하게된 계기는 다음과 같다.
+![syscon and sflash](https://user-images.githubusercontent.com/40509850/101976312-7cfae100-3c87-11eb-8383-a48ca297c669.png)
 
-시스템 펌웨어 버전과 제조 모드 정보는 syscon의 snvs에 저장되고, syscon은 보드의 거의 모든 항목에 대한 클럭/전원 관리, 대부분의 프로세서 부팅, 기타 저속 주변 장치에 대한 프록시 역할 등 다양한 역할을 하기 때문에 dump를 해보았다. 또한 Aeolia용 펌웨어 업데이트 패키지는 sflash에 저장되기 때문에 sflash도 함께 dump를 진행해봤다. 추가적으로 새로운 칩에 dump한 내용을 백업해 두면, 추후 버전을 업데이트 하더라도 다시 백업해둔 칩으로 교체하여 다운그레이드를 할 수 있다.
+시스템 펌웨어 버전과 제조 모드 정보는 syscon의 snvs에 저장되고, syscon은 보드의 거의 모든 항목에 대한 클럭/전원 관리, 대부분의 프로세서 부팅, 기타 저속 주변 장치에 대한 프록시 역할 등 다양한 역할을 하기 때문에 dump를 해보았다. 또한 Aeolia용 펌웨어 업데이트 패키지는 sflash에 저장되기 때문에 sflash도 함께 dump를 진행해봤다. 추가적으로 새로운 칩에 dump한 내용을 백업해 두면, 추후 버전을 업데이트 하더라도 다시 백업해둔 칩으로 교체하여 다운그레이드를 할 수 있다. 자세한 내용은 [fail0verflow](https://fail0verflow.com/blog/2018/ps4-aeolia/)의 블로그에 기술되어있다.
 
 ## 2. UART Log
 
