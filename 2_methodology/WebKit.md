@@ -434,7 +434,7 @@ PS4 브라우저에서 사용하는 property 중에서 Safari에서 사용하지
 
 ![image](https://user-images.githubusercontent.com/45416961/101769433-4b203800-3b2a-11eb-979e-a71af77875dc.png)
 
-Set 버튼을 누른 후 Submit을 누르면, PS4에서 사용하는 window property들을 서버로 전송해 주는 소스코드이다.
+Set 버튼을 누른 후 Submit을 누르면, PS4에서 사용하는 window property들을 서버로 전송해 주는 소스코드이다. form 태그의 action에 들어가는 주소와 포트를 자신의 서버로 바꿔줘야한다.
 
 ```
 "GET /?test=undefineda+document+object+window+self+name+location+history+locationbar+menubar+personalbar+scrollbars+statusbar+
