@@ -367,7 +367,8 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 아마 옛날 버전의 WebKit을 사용해서 그런 것일지도 모르겠다.*(본 프로젝트에서는 WebKit 최신 버전을 이용할 일이 없어서 빌드를 해보지 않았다.)* 2018-12-16 버전으로 Msan이나 UBSan을 붙여서 테스트를 해봤더니 오탐률이 거의 100%에 육박했다. 소위 말해 '개복치' 스럽다고도 할 수 있겠다. jsc에서 `print("hello world")`만 해줘도 Memory Leak이 발생하니 그 결과가 가히 실망스럽다. 
 
 ## 5. 1-day 취약점 분석 방법론
-다음으로는 본 프로젝트에서 1-day 취약점을 분석하기 위해 수립 및 시행한 방법론을 소개하고자 한다.
+다음으로는 본 프로젝트에서 1-day 취약점을 분석하기 위해 수립 및 시행한 방법론을 소개하고자 한다. 아래의 사이트들에서 PS4에 사용가능한 취약점을 찾아보았다. **PS4 WebKit에서는 JIT과 GC가 꺼져있기 때문에 JIT과, GC를 사용하지 않는지 가장 먼저 파악을 했다. 그리고 Sony에서 WebKit을 2018년 12월 쯤에 fork를 했다고 하더라도, Sony 내부에서 자체적으로 자신들의 WebKit을 패치해서 나가기 때문에 해당 취약점이 2018년 12월 이후 취약점이라도, PS4 WebKit에서 패치가 되었는지 확인해야했다.** [이 곳](https://doc.dl.playstation.net/doc/ps4-oss/webkit.html)에 있는 소스코드를 보며 패치가 되었는지 확인했다.
+
 ### 5.1. bugs.chromium
 ![image](https://user-images.githubusercontent.com/45416961/101621717-771fb880-3a59-11eb-9eca-bce3ecbad852.png)
 ![image](https://user-images.githubusercontent.com/45416961/101621198-c9aca500-3a58-11eb-9b20-12056b95fa12.png)
