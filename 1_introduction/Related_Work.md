@@ -26,9 +26,9 @@ CTurt가 작성한 글은 상당히 오래전에 작성된 것이긴 하지만 P
 
 2020년도 Black hat 컨퍼런스에서 발표된 PS4 0-Day exploit 관련 문서<sup id="head2">[2](#foot2)</sup>이다. 
 
-해당 문서에서의 취약점은 fuzzer에 의해 발견 되었다. `WebCore::ValidationMessage::buildBubbleTree` 함수가 실행되는 도중 layout을 update하게 되고, layout update 할 때 사용자 지정 JS Handler가 호출이 된다. 만약 JS Handler가 위 함수에서 사용하는 object인 `ValidationMessage`를 free해버린다면 위 함수 내에서 UAF가 발생하게 되는 취약점이다. 위 취약점을 이용해 code execution을 해내는 과정을 memory allocator의 동작 원리 소개와 함께 소개해준다. 위 취약점을 이용해 arbitrary decrement primitive, relative read primitive, relative read/write primitive, arbitrary read/write primitive를 차례대로 획득하여 마지막으로 code execution까지 해내는 과정을 서술해주고 있다.
+해당 문서에서의 취약점은 fuzzer에 의해 발견 되었다. `WebCore::ValidationMessage::buildBubbleTree` 함수가 실행되는 도중 layout을 update하게 되고, layout update 할 때 사용자 지정 JS Handler가 호출이 된다. 만약 JS Handler가 위 함수에서 사용하는 object인 `ValidationMessage`를 free해버린다면 위 함수 내에서 UAF가 발생하게 되는 취약점이다. 위 취약점을 이용해 code execution을 해내는 과정을 memory allocator의 동작 원리 소개와 함께 소개해준다. Arbitrary decrement primitive, relative read primitive, relative read/write primitive, arbitrary read/write primitive를 차례대로 획득한 후 마지막으로 code execution까지 해내는 과정을 서술해주고 있다.
 
-위 취약점을 사용하기 위해 ASLR 우회 또는 information leak 취약점이 필요한데, PS4의 ASLR이 그렇게 강하지 않고 6.xx 버전 PS4는 이전에 알려진 `bad-hoist`취약점을 이용하여 memory mapping 정보를 알아올 수 있어서 관련된 주소값을 하드코딩 해 넣으며 exploit에 성공했지만, 7.xx 버전은 memory mapping 정보를 알 수 없어 bruteforce를 통해 유효한 주소값을 획득하는 것을 시도중이라고 한다.
+위 취약점을 사용하기 위해 ASLR 우회 또는 information leak 취약점이 필요한데, PS4의 ASLR이 그렇게 강하지 않고 6.xx 버전 PS4는 이전에 알려진 `bad-hoist`취약점을 이용하여 memory mapping 정보를 알아올 수 있어서 관련된 주소값을 하드코딩 해 넣으며 exploit에 성공했지만, 7.xx 버전은 알려진 memory mapping 정보가 없어 bruteforce를 통해 유효한 주소값을 획득하는 것을 시도중이라고 한다.
 
 해당 exploit은 [Synacktiv의 Github 저장소](https://github.com/synacktiv/PS4-webkit-exploit-6.XX)에서 확인 할 수 있다.
 
