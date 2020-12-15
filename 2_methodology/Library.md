@@ -18,6 +18,8 @@
   - [3.10. so 파일로 변환된 라이브러리 테스트](#310-so-파일로-변환된-라이브러리-테스트)
 - [4. 스크립트](#4-스크립트)
   - [4.1. 한계점](#41-한계점)
+    - [4.1.1 plt와 got 연결 X](#411-plt와-got-연결-x)
+    - [4.1.2 dlsym 작동 안함](#412-dlsym-작동-안함)
 ---
 # Library <!-- omit in toc -->
 ## 1. 개요
@@ -515,8 +517,163 @@ dlsym이 작동하지 않아서 이 함수의 오프셋을 넣고 함수 포인�
 추후 넣을 계획
 ```
 ### 4.1. 한계점
+#### 4.1.1 plt와 got 연결 X
 plt와 got가 연결되어있지 않기 때문에, 다른 라이브러리에서 import 하여 사용하는 함수는 실행시킬 수 없다.<br>
-만약 퍼징을 돌리려는 함수 안에 외부 라이브러리의 함수가 사용된다면 자체적으로 연결시켜줘야함<br>
+만약 퍼징을 돌리려는 함수 안에 외부 라이브러리의 함수가 사용된다면 자체적으로 연결시켜줘야한다.<br><br>
+우리가 퍼징을 시도할 xml 라이브러리에서는 libc 함수를 import 시키기 때문에 해당 함수들을 프로그랜 내의 plt 주소로 점프 하는 방식을 사용하여 연결시켜주었다.<br>
+우리가 적용한 방법은 아래와 같다.<br>
+1. xml 라이브러리에서 사용되는 libc 함수(ex. free, malloc)를 퍼징할 프로그램에도 호출한다. 이를 통해 프로그램 내에 해당 함수들의 plt, got가 생기게 된다.
+2. dlopen을 한 이후, 프로그램 내부 주소를 라이브러리에 저장한다.
+```c
+    handle = dlopen("./xml_library", RTLD_LAZY);
+
+    asm("pushq %rax;"
+    "movq (%rax), %rax;"
+    "movq %r12, 0x28900(%rax);" // r12에는 프로그램 내부 함수 _start의 plt 주소가 존재한다.
+                                // base 주소에 0x28900을 더함으로써 비어있는 메모리에 값을 적게 만들었다.
+    "popq %rax;");
+```
+3. 저장된 프로그램 내부 주소를 사용하여 프로그램 내의 plt 주소로 jmp 해주는 코드를 xml 라이브러리의 text 섹션에 적는다.<br>아래는 위에서 설명한 코드를 xml 라이브러리에서 사용하는 libc 함수 모두에게 만들어주는 코드이다.
+```python
+# mov rax, qword ptr [rip + offset]  [rip + offset] 주소에는 _start 함수의 주소가 들어있다.
+# sub rax, 0xe0
+# jmp rax
+
+plt_offset_list = []
+function_list = []
+mov = "\x48\x8b\x05"
+mov_offset = 0x5D30-7 # minus 7 because $rip is containing next command's address
+small_sub = "\x48\x83\xE8" # 1byte
+big_sub = "\x48\x2d" # 4byte
+jmp = "\xFF\xE0"
+
+code_offset_list = []
+code_offset = 0
+
+with open("input.txt", "r") as f:
+    for line in f.readlines():
+        plt_offset = line.split()[0]
+        function_list.append(line.split()[1])
+        plt_offset_list.append(int(plt_offset, 16))
+
+with open("result.bin", "w") as f:
+    for plt_offset in plt_offset_list:
+        if plt_offset == 0:
+            code_offset_list.append(-1)
+            continue
+
+        f.write(mov)
+        temp = mov_offset
+        for _ in range(4):
+            f.write(chr(temp%0x100))
+            temp //= 0x100
+
+        code_offset_list.append(code_offset)
+        if plt_offset < 128:
+            code_offset += 13
+            mov_offset -= 13
+            f.write(small_sub)
+            f.write(chr(plt_offset))
+        else:
+            code_offset += 15
+            mov_offset -= 15
+            f.write(big_sub)
+            for _ in range(4):
+                f.write(chr(plt_offset%0x100))
+                plt_offset //= 0x100
+        f.write(jmp)
+
+for i in range(len(function_list)):
+    print(function_list[i] + " " + str(hex(code_offset_list[i])))
+```
+4. 라이브러리 내에 있는 고장난 plt에 text 섹션에 적은 각각 함수에 맞는 코드들의 주소를 넣어준다.
+```c
+    int arr_code[] = {0,0xf,0x1e,0x2d,0x3a,-1,0x49,0x58,0x67,0x76,0x85,0x94,0xa3,0xb0,0xbf,0xcc,-1,0xdb,0xea,0xf9,0x108,0x115,0x124,0x133,0x142}; // 각 함수들에 해당하는 코드가 위치한 오프셋
+    long long target;
+    long long *target_save;
+
+    for(int i = 0;i<23;i++){
+        if(arr_code[i] == -1){
+            continue;
+        }
+        target = (long long)*handle + (long long)arr_code[i] + 0x22bd0; // 해당 함수에 해당하는 text 섹션 코드 위치를 구한다.
+        target_save = (long long *)((long long)*handle + (long long)0x24368 + (8*i)); // 라이브러리 내에 있는 해당 함수의 plt 
+        *target_save = target;
+    }
+```
+
+<br>
+아래는 프로그램의 전체 코드이다.
+
+```c
+#include <stdio.h>
+#include <dlfcn.h>
+#include <string.h>
+#include <stdlib.h>
+#include <iostream>
+
+int main(int argc, char *argv[]){
+
+    char text[30];
+    const char test[30] = "AAAAAAA";
+
+    if(argv[0]==0){
+        int *a;
+        int* c = new int;
+        delete c;
+        strncpy(text,text,10);
+        memmove(test+15,test+10,11);
+        a = strnlen(text,30);
+        a = strlen(text);
+        a = malloc(30);
+        free(a);
+        a = memcpy(text,test,10);
+        a = memset(text,test,10);
+        a = strcmp(text,test);
+        a = strncmp(text,test,10);
+        a = memcmp(text,test,10);
+        a = fclose(0);
+        FILE* b;
+        b  = fopen(test, test);
+        a = fread(0, 0,0,0);
+        a = fseek(0,0,0);
+        a = ftell(0);
+        rewind(0);
+        a = snprintf(0,0,0);
+    }
+
+    int arr_code[] = {0,0xf,0x1e,0x2d,0x3a,-1,0x49,0x58,0x67,0x76,0x85,0x94,0xa3,0xb0,0xbf,0xcc,-1,0xdb,0xea,0xf9,0x108,0x115,0x124,0x133,0x142};
+    long long target;
+    long long *target_save;
+
+    long long *handle;
+    double *(*func)();
+
+    handle = dlopen("./xml_library", RTLD_LAZY);
+
+    asm("pushq %rax;"
+    "movq (%rax), %rax;"
+    "movq %r12, 0x28900(%rax);"
+    "popq %rax;");
+
+    for(int i = 0;i<23;i++){
+        if(arr_code[i] == -1){
+            continue;
+        }
+        target = (long long)*handle + (long long)arr_code[i] + 0x22bd0;
+        target_save = (long long *)((long long)*handle + (long long)0x24368 + (8*i));
+        *target_save = target;
+    }
+
+    func = (long long)*handle+0x4118; // 우리가 원하는 함수를 실행하는 코드이다.
+
+    func();
+    return 0;
+}
+```
+<br><br>
+
+#### 4.1.2 dlsym 작동 안함
 dlsym이 안된다. - 심볼 테이블에 무슨 문제가 있는듯
 
 ---
