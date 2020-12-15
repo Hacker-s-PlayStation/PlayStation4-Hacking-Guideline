@@ -1,5 +1,5 @@
 # 결론
-우리 팀원들은 BoB Project를 통해 약 3개월 간 PS4 Jailbreak를 탐구했다. Jailbreak를 하는 가장 기본적인 방법은 WebKit 브라우저와 FreeBSD 커널의 exploit을 통한 방법이다. 3개월이라는 단기간에 둘을 exploit하기 위하여 PS4에 존재하는 WebKit과 FreeBSD가 최신버전이 아니라는 것을 이용하여 패치되지 않은 1 day 취약점을 이용하여 exploit하는 방법론을 채택했다. 그러나, 브라우저 취약점과 exploit의 큰 부분을 차지하는 WebAssembly, Garbage Collector 및 JIT 모듈이 PS4 WebKit에서는 사용할 수 없다는 점, Sony에서 자체적으로 꾸준하게 패치한다는 점으로 인해 프로젝트 기간 내에 Exploit을 하는데 실패했다.<br>
+우리 팀원들은 BoB Project를 통해 약 3개월 간 PS4 Jailbreak를 탐구했다. Jailbreak를 하는 가장 기본적인 방법은 WebKit 브라우저와 FreeBSD 커널의 exploit을 통한 방법이다. 3개월이라는 단기간에 둘을 exploit하기 위하여 PS4에 존재하는 WebKit과 FreeBSD가 최신버전이 아니라는 것을 이용하여 패치되지 않은 1 day 취약점을 이용하여 exploit하는 방법론을 채택했다. 그러나, 브라우저 취약점과 exploit의 큰 부분을 차지하는 WebAssembly, Garbage Collector 및 JIT 모듈이 PS4 WebKit에서는 사용할 수 없다는 점, Sony에서 자체적으로 꾸준하게 패치한다는 점으로 인해 결국 WebKit도 exploit하지 못한채로 기간 내에 프로젝트 목적을 달성하는데 실패했다.<br>
 
 UART Log를 통해 PS4 서버와 통신을 하여 env파일을 주기적으로 전달받는 것을 확인했고, 이를 이용하여 해당 부분을 처리하는 라이브러리의 취약점을 이용하여 PS4 커널 exploit을 시도했다. 그리고 WebKit에서 사용하는 모듈 중 WebKit 내부 모듈이 아닌, 외부 라이브러리를 끌어다쓰는 모듈의 취약점을 이용하려고 했다. 따라서 PS4 내부에있는 라이브러리 파일을 분석하는 것과 PC에서 해당 라이브러리 Fuzzer를 돌리기 위해 PS4의 라이브러리 포맷인 sprx를 PC에서 사용가능한 포맷인 so로 바꾸는 것을 시도했다.<br>
 
