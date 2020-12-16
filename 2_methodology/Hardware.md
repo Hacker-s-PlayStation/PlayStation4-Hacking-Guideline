@@ -237,7 +237,7 @@ TeensyLoader를 다운로드 받은 뒤 실행해 준다. git clone 받은 폴�
 dump 뿐만 아니라 write도 가능하다. 실제로 PS4에서 NOR 칩의 일부 섹션이 손상되어 BLOD (Blue Light of Death) 문제가 발생한 경우, sflash를 덤프하고 `00 00 00 00..` 영역을 `FF FF FF FF...` 로 덮어 쓴 뒤 write 해 줌으로써 수리를 하기도 했다. 이 write 기능을 추후에 이용할 수 있지 않을까 싶다.
 
 ## 5. Reference
-> - [SYSGLITCH_DOWNGRADE (2).pdf](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/37e4d1b3-06ea-4ed1-ab61-ce45f6146c7b/SYSGLITCH_DOWNGRADE_(2).pdf)
+> - [SYSGLITCH_DOWNGRADE (2).pdf](https://gofile.io/d/sCK68r)
 > - [PS4 SysGlitch Tool and SysCon Glitching Pinout by VVildCard777](https://www.psxhax.com/threads/ps4-sysglitch-tool-and-syscon-glitching-pinout-by-vvildcard777.7545/)
 > - [PS4 NOR chip repair that displays signs of a BLOD](https://gbatemp.net/threads/ps4-nor-chip-repair-that-displays-signs-of-a-blod.569955/)
 > - [PS4 Aux Hax 2: Syscon](https://fail0verflow.com/blog/2018/ps4-syscon/)
