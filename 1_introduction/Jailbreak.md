@@ -11,7 +11,7 @@
 # Jailbreak <!-- omit in toc -->
 ## 1. 개요
 Jailbreak란, 프로그램의 취약점을 이용하여 PS4의 높은 권한을 획득하여 기존의 서비스에서는 사용할 수 없는 기능을 사용할 수 있게 되는 것을 일컫는다. PS4의 경우, 브라우저의 취약점과 커널의 취약점을 chaining하여 Jailbreak를 하는 경우가 일반적이다. PS4는 WebKit기반의 browser를 사용하고, FreeBSD 9 기반의 OS인 Orbis OS를 사용한다.<br>
-2020년 12월 9일 기준, PS4 펌웨어는 8.01까지 업데이트가 된 상황에서 Jailbreak는 PS4 펌웨어 6.72버전까지 진행이 되었다. sleirsgoevy가 6.72 Jailbreak 도구를 만들었으며 소스코드는 [여기](https://github.com/sleirsgoevy/ps4jb)에서 확인할 수 있다. Jailbreak된 PS4 펌웨어 버전 및 취약점에 대한 자세한 내용은 [PS4 developer wiki](https://www.psdevwiki.com/ps4/Working_Exploits)를 참고하면 된다.
+2020년 12월 9일 기준, PS4 펌웨어는 8.03까지 업데이트가 된 상황에서 Jailbreak는 PS4 펌웨어 6.72버전까지 진행이 되었다. sleirsgoevy가 6.72 Jailbreak 도구를 만들었으며 소스코드는 [여기](https://github.com/sleirsgoevy/ps4jb)에서 확인할 수 있다. Jailbreak된 PS4 펌웨어 버전 및 취약점에 대한 자세한 내용은 [PS4 developer wiki](https://www.psdevwiki.com/ps4/Working_Exploits)를 참고하면 된다.
 
 ### 1.1. 주의사항
 > PS4 펌웨어 6.72버전을 기준으로 기술이 되어있다. **본 프로젝트의 목적은 PS4의 취약점을 탐색하여 최신 펌웨어에서의 Jailbreak 가능성을 확인하고 이를 패치하여 PS4 플랫폼 위에 형성되어있는 지식재산들을 보호하는 것이 목적으로, Jailbreak를 악용하는 것이 아님을 밝힌다.** 위 목적을 달성하기 위해서 참고했던 자료 및 도구들을 본 문서에 기술한다. **본 프로젝트에서 참고한 Jailbreak 도구의 악용을 통해 발생하는 불이익에 대해서 본 프로젝트 팀원들은 책임을 지지 않을 것을 분명하게 밝힌다.**
