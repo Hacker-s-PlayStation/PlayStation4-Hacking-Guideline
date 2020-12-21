@@ -46,6 +46,7 @@ NID와 함수명을 매치한 약 38000개의 데이터를 모아놓고, 이를 
 ### 3.1. ps4 라이브러리
 ![image](https://user-images.githubusercontent.com/39231485/101594750-8e4caf00-3a35-11eb-891e-3102d8be47be.png)
   * ps4 라이브러리는 소니가 자체적으로 만든 sprx라는 포맷을 사용한다.
+  * [https://www.psdevwiki.com/ps4/SELF_File_Format](https://www.psdevwiki.com/ps4/SELF_File_Format) 위 사이트에서 해당 포맷 구조에 대해 상세히 나와있다.
 ### 3.2. sprx를 so파일로 바꾸기
 퍼징을 진행할 때, MITM기법으로 env파일을 변조하여 기기에 전달하는 방식은 속도가 매우 느리고, 콘솔 기기내의 code coverage를 분석하는데도 어려움이 있다. 따라서 xml 처리 루틴을 PC에서 재현한 후에 이를 이용하여 PC상에서 퍼징을 하려고 한다. sprx는 PS4 전용 포맷이기 때문에 이를 PC에서 사용할 수 있도록 하기 위해 elf 포맷으로 변경하는 것을 시도했다.
 ### 3.3. env파일 암복호화
