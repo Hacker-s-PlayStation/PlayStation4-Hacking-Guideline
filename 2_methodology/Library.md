@@ -520,7 +520,11 @@ dlsym이 작동하지 않아서 이 함수의 오프셋을 넣고 함수 포인�
 위에서 설명한 내용들을 자동화 했다고 생각하면 된다. 아직 많은 제약사항들이 있지만, 퍼징을 하는데 있어 훨씬 더 편하게 할 수 있을 것이다.<br><br>
 스크립트는 [여기](https://github.com/Hacker-s-PlayStation/PlayStation4-Hacking-Guideline/tree/main/2_methodology/sprx_to_so)에서 확인할 수 있다.<br>
 두개의 파일을 모두 다운받고 script.py 파일을 실행시키면 된다.
-명령어 : python3 script.py (sprx library)
+<br>명령어 : python3 script.py (sprx library)
+<br>스크립트를 짜는데 참고한 자료로는 아래와 같다.<br>
+* env 파일 복호화 : https://github.com/SocraticBliss/ps4_module_loader
+* ps4 elf loader 파싱 : https://github.com/SocraticBliss/ps4_env_decryptor
+
 ### 4.1. 한계점
 #### 4.1.1 plt와 got 연결 X
 plt와 got가 연결되어있지 않기 때문에, 다른 라이브러리에서 import 하여 사용하는 함수는 실행시킬 수 없다.<br>
