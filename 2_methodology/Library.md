@@ -522,8 +522,8 @@ dlsym이 작동하지 않아서 이 함수의 오프셋을 넣고 함수 포인�
 두개의 파일을 모두 다운받고 script.py 파일을 실행시키면 된다.
 <br>명령어 : python3 script.py (sprx library)
 <br>스크립트를 짜는데 참고한 자료로는 아래와 같다.<br>
-* env 파일 복호화 : https://github.com/SocraticBliss/ps4_module_loader
-* ps4 elf loader 파싱 : https://github.com/SocraticBliss/ps4_env_decryptor
+* env 파일 복호화 : https://github.com/SocraticBliss/ps4_env_decryptor 
+* ps4 elf loader 파싱 : https://github.com/SocraticBliss/ps4_module_loader
 
 ### 4.1. 한계점
 #### 4.1.1 plt와 got 연결 X
