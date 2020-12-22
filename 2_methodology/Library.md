@@ -676,7 +676,6 @@ int main(int argc, char *argv[]){
     return 0;
 }
 ```
-<br><br>
 
 #### 4.1.2 dlsym 작동 안함
 dlsym이 안된다. - 심볼 테이블에 무슨 문제가 있는 듯하다. 원인은 파악하지 못했다.
